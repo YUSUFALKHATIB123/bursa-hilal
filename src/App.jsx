@@ -42,11 +42,15 @@ import nubuk002 from "./assets/nubuk-002.jpg";
 import decoratedInterior from "./assets/decorated-interior-empty-home.jpg";
 import prayer1251 from "./assets/1251.jpg";
 // Gallery images
-import storefront from "./assets/photo_2025-06-17_12-28-14.jpg";
-import interiorView from "./assets/photo_2025-06-17_12-28-47.jpg";
-import containerFactory from "./assets/photo_2025-06-17_12-27-50.jpg";
-import "./App.css";
+import BURSA1 from "./assets/BURSA1.webp";
+import BURSA2 from "./assets/BURSA2.webp";
+import BURSA3 from "./assets/BURSA3.webp";
+import BURSA4 from "./assets/BURSA4.webp";
 
+import "./App.css";
+import upholsteryImg from "./assets/upholstery.webp";
+import cushionsImg from "./assets/cushions.webp";
+import carpetImg from "./assets/carpet.webp";
 // Counter Animation Hook
 function useCountUp(end, duration = 2000) {
   const [count, setCount] = useState(0);
@@ -112,7 +116,10 @@ function ProductDetailsModal({ product, isOpen, onClose }) {
 
   const whatsappNumber = "+905343168831";
   const message = `Hello! I'm interested in your textile product: ${product.name} (${product.productId}). Could you please provide more information?`;
-  const whatsappUrl = `https://wa.me/${whatsappNumber.replace("+", "")}?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(
+    "+",
+    ""
+  )}?text=${encodeURIComponent(message)}`;
 
   const images = product.images || [product.image];
 
@@ -259,7 +266,6 @@ function ProductDetailsModal({ product, isOpen, onClose }) {
     </div>
   );
 }
-
 
 // Custom hook for dark mode with persistence
 function useDarkMode() {
@@ -426,19 +432,19 @@ function HomePage() {
     {
       name: "Upholstery  Fabrics",
       description: "Elegant and durable fabrics for furniture and upholstery",
-      image: "/api/placeholder/300/200",
+      image: upholsteryImg,
       link: "furnishing-fabrics",
     },
     {
       name: "Cushions",
       description: "Soft and stylish cushions for comfort and decoration",
-      image: "/api/placeholder/300/200",
+      image: cushionsImg,
       link: "cushions",
     },
     {
       name: "Carpets",
       description: "Premium floor coverings and area rugs for modern spaces",
-      image: "/api/placeholder/300/200",
+      image: carpetImg,
       link: "carpets",
     },
   ];
@@ -576,7 +582,13 @@ function HomePage() {
                 key={index}
                 className="bg-white dark:bg-[#112B3C] rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] animate-fadeInUp stagger-item"
               >
-                <div className="aspect-video bg-gradient-to-br from-[#1C3B2C] to-[#4F7D66] transition-transform duration-300 hover:scale-105"></div>
+                <div className="aspect-video overflow-hidden rounded-t-xl">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-[#E5E7EB] mb-2">
                     {product.name}
@@ -1019,25 +1031,25 @@ function GalleryPage() {
       id: 1,
       title: "Company Logo Wall",
       description: "Our brand identity displayed prominently",
-      image: logoImage, // Using existing logo as placeholder for missing 6f5c306e.png
+      image: BURSA1,
     },
     {
       id: 2,
       title: "Storefront View",
       description: "Our modern textile showroom entrance",
-      image: storefront,
+      image: BURSA2,
     },
     {
       id: 3,
       title: "Interior Showroom",
       description: "Inside our fabric display area",
-      image: interiorView,
+      image: BURSA3,
     },
     {
       id: 4,
       title: "Container & Factory",
       description: "Our manufacturing and shipping facilities",
-      image: containerFactory,
+      image: BURSA4,
     },
   ];
 
@@ -1062,11 +1074,11 @@ function GalleryPage() {
               key={image.id}
               className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <div className="aspect-square overflow-hidden">
+              <div className="w-full h-[300px] overflow-hidden rounded-lg relative">
                 <img
                   src={image.image}
                   alt={image.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 z-10 relative"
                 />
               </div>
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
