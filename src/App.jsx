@@ -29,6 +29,7 @@ import babyfaceColor3 from "./assets/babyface-color3.jpeg";
 import couchIcon from "./assets/couch.png";
 import cushionIcon from "./assets/cushion.png";
 import carpetIcon from "./assets/prayer.png";
+import curtainIcon from "./assets/curtain.png";
 // New fabric images
 import jakar1 from "./assets/Jakar-1.jpg";
 import jakar2 from "./assets/Jakar-2.jpg";
@@ -51,6 +52,7 @@ import "./App.css";
 import upholsteryImg from "./assets/upholstery.webp";
 import cushionsImg from "./assets/cushions.webp";
 import carpetImg from "./assets/carpet.webp";
+import curtainImg from "./assets/curtain.png";
 // Counter Animation Hook
 function useCountUp(end, duration = 2000) {
   const [count, setCount] = useState(0);
@@ -447,6 +449,12 @@ function HomePage() {
       image: carpetImg,
       link: "carpets",
     },
+    {
+      name: "Curtains",
+      description: "Elegant window treatments and decorative curtains",
+      image: curtainImg,
+      link: "curtains",
+    },
   ];
 
   const handleLearnMore = (link) => {
@@ -763,6 +771,7 @@ function CatalogPage() {
     { id: "furnishing-fabrics", name: "Upholstery Fabrics", icon: couchIcon },
     { id: "cushions", name: "Cushions", icon: cushionIcon },
     { id: "carpets", name: "Carpets", icon: carpetIcon },
+    { id: "curtains", name: "Curtains", icon: curtainIcon },
   ];
 
   const products = {
@@ -910,6 +919,31 @@ function CatalogPage() {
         composition: "80% Wool, 20% Silk",
         width: "200cm x 150cm",
         weight: "900 g/m²",
+      },
+    ],
+    curtains: [
+      {
+        id: 13,
+        name: "Premium Velvet Curtains",
+        category: "curtain",
+        description: "Luxurious velvet curtains for elegant interiors",
+        image: velvet1,
+        productId: "CT-001",
+        composition: "100% Polyester Velvet",
+        width: "140cm",
+        weight: "280 g/m²",
+        isNew: true,
+      },
+      {
+        id: 14,
+        name: "Modern Decorative Curtains",
+        category: "curtain",
+        description: "Contemporary curtain designs for modern living spaces",
+        image: decoratedInterior,
+        productId: "CT-002",
+        composition: "85% Polyester, 15% Cotton",
+        width: "150cm",
+        weight: "240 g/m²",
       },
     ],
   };
