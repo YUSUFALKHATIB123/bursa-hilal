@@ -1,25 +1,34 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
-import {
-  Moon,
-  Sun,
   Menu,
   X,
+  Sun,
+  Moon,
   Phone,
   Mail,
   MapPin,
-  MessageCircle,
-  Plus,
-  ChevronLeft,
+  Clock,
   ChevronRight,
+  ChevronLeft,
+  MessageCircle,
+  Star,
+  ShoppingCart,
+  Heart,
+  Eye,
+  ArrowRight,
+  ArrowLeft,
+  Home,
+  Info,
+  Package,
+  Image,
+  Contact,
+  Globe,
+  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button.jsx";
+import WhatsappChatButton from "./components/WhatsappChatButton";
+import emailjs from 'emailjs-com';
 import logoImage from "./assets/logo.avif";
 import fabricSampleImage from "./assets/fabric-sample.jpeg";
 import companyBuildingImage from "./assets/company-building.webp";
@@ -52,7 +61,14 @@ import "./App.css";
 import upholsteryImg from "./assets/upholstery.webp";
 import cushionsImg from "./assets/cushions.webp";
 import carpetImg from "./assets/carpet.webp";
-import curtainImg from "./assets/curtain.png";
+import curtainImg from "./assets/Curtains-4k.jpg";
+import { FaWhatsapp } from "react-icons/fa";
+import { Share2 } from "lucide-react";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation as SwiperNavigation, Pagination, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 // Counter Animation Hook
 function useCountUp(end, duration = 2000) {
   const [count, setCount] = useState(0);
@@ -109,10 +125,12 @@ function useCountUp(end, duration = 2000) {
 }
 
 // Product Details Modal Component with Image Carousel
-function ProductDetailsModal({ product, isOpen, onClose }) {
+function ProductDetailsModal({ product, isOpen, onClose, t }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
+  const [priceType, setPriceType] = useState("bulk");
+  const price = priceType === "bulk" ? 2.25 : 2.10;
 
   if (!isOpen || !product) return null;
 
@@ -156,7 +174,7 @@ function ProductDetailsModal({ product, isOpen, onClose }) {
         <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
           <div>
             <span className="text-sm text-[#4F7D66] font-medium uppercase">
-              {product.category}
+              {t ? t(product.category) : product.category}
             </span>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-[#E5E7EB]">
               {product.name}
@@ -172,43 +190,24 @@ function ProductDetailsModal({ product, isOpen, onClose }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
           <div className="relative aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
-            <img
-              src={images[currentImageIndex]}
-              alt={product.name}
-              className="w-full h-full object-cover"
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-            />
-            {images.length > 1 && (
-              <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-200"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-200"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                  {images.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                        index === currentImageIndex
-                          ? "bg-white"
-                          : "bg-white bg-opacity-50"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
+            <Swiper
+              modules={[SwiperNavigation, Pagination, A11y]}
+              navigation
+              pagination={{ clickable: true }}
+              style={{ height: '100%', borderRadius: '0.75rem' }}
+              className="custom-swiper"
+            >
+              {images.map((img, idx) => (
+                <SwiperSlide key={idx}>
+                  <img
+                    src={img}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                    style={{ borderRadius: '0.75rem', height: '100%' }}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
 
           <div className="space-y-6">
@@ -219,7 +218,7 @@ function ProductDetailsModal({ product, isOpen, onClose }) {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="font-medium text-gray-900 dark:text-[#E5E7EB]">
-                  Product ID:
+                  {t ? t('productId') : "Product ID"}:
                 </span>
                 <span className="text-gray-600 dark:text-[#E5E7EB]">
                   {product.productId}
@@ -227,7 +226,7 @@ function ProductDetailsModal({ product, isOpen, onClose }) {
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-medium text-gray-900 dark:text-[#E5E7EB]">
-                  Composition:
+                  {t ? t('composition') : "Composition"}:
                 </span>
                 <span className="text-gray-600 dark:text-[#E5E7EB]">
                   {product.composition}
@@ -235,7 +234,7 @@ function ProductDetailsModal({ product, isOpen, onClose }) {
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-medium text-gray-900 dark:text-[#E5E7EB]">
-                  Width:
+                  {t ? t('width') : "Width"}:
                 </span>
                 <span className="text-gray-600 dark:text-[#E5E7EB]">
                   {product.width}
@@ -243,24 +242,22 @@ function ProductDetailsModal({ product, isOpen, onClose }) {
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-medium text-gray-900 dark:text-[#E5E7EB]">
-                  Weight:
+                  {t ? t('weight') : "Weight"}:
                 </span>
                 <span className="text-gray-600 dark:text-[#E5E7EB]">
                   {product.weight || "250 g/m²"}
                 </span>
               </div>
-            </div>
-
-            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full bg-[#25D366] hover:bg-[#20BA5A] text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105"
-              >
-                <MessageCircle className="h-5 w-5 mr-2" />
-                Start Chat
-              </a>
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-gray-900 dark:text-[#E5E7EB]">{t ? t('price') : "Price"}:</span>
+                <span className="text-[#25D366] font-bold">$2.25 /m</span>
+              </div>
+              <div className="mt-3 flex items-center gap-2 bg-red-50 border border-red-300 rounded px-3 py-2">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path fill="#dc2626" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                <span className="text-red-700 text-sm font-semibold">
+                  {t ? t('bulkOrderMessage') : "If you have a large quantity order, please contact us for a special price."}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -293,20 +290,26 @@ function useDarkMode() {
 }
 
 // Navigation Component
-function Navigation() {
-  const [isDark, toggleDarkMode] = useDarkMode();
+function Navigation({ language, toggleLanguage, t, isDark, toggleDarkMode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { name: "Home", href: "/" },
-    { name: "About Us", href: "/about" },
-    { name: "Fabric Catalog", href: "/catalog" },
-    { name: "Gallery", href: "/gallery" },
-    { name: "Contact", href: "/contact" },
+    { name: t('home'), href: "/" },
+    { name: t('about'), href: "/about" },
+    { name: t('catalog'), href: "/catalog" },
+    { name: t('gallery'), href: "/gallery" },
+    { name: t('contact'), href: "/contact" },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-gradient-to-r from-[#0b3d2e] to-[#194d37] text-white shadow-lg transition-all duration-400">
+    <nav
+      className="sticky top-0 z-50 text-white shadow-lg transition-all duration-400"
+      style={
+        isDark
+          ? { background: "linear-gradient(90deg, #0B1623 0%, #22395c 100%)" }
+          : { background: "linear-gradient(120deg, #0b3d2e 0%, #4F7D66 100%)" }
+      }
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Company Name - Now Clickable */}
@@ -338,7 +341,25 @@ function Navigation() {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-[#E5E7EB] hover:text-white hover:bg-[#4F7D66] px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+                  className="text-[#E5E7EB] px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+                  style={
+                    isDark
+                      ? { "&:hover": { color: "#ffffff", background: "rgba(34, 57, 92, 0.8)" } }
+                      : { "&:hover": { color: "#ffffff", background: "rgba(79, 125, 102, 0.8)" } }
+                  }
+                  onMouseEnter={(e) => {
+                    if (isDark) {
+                      e.currentTarget.style.color = "#ffffff";
+                      e.currentTarget.style.background = "rgba(34, 57, 92, 0.8)";
+                    } else {
+                      e.currentTarget.style.color = "#ffffff";
+                      e.currentTarget.style.background = "rgba(79, 125, 102, 0.8)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#E5E7EB";
+                    e.currentTarget.style.background = "transparent";
+                  }}
                 >
                   {item.name}
                 </a>
@@ -346,13 +367,56 @@ function Navigation() {
             </div>
           </div>
 
-          {/* Dark Mode Toggle */}
+          {/* Dark Mode Toggle and Language Toggle */}
           <div className="flex items-center space-x-2">
+            {/* Language Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleLanguage}
+              className="text-white font-medium transition-all duration-200"
+              style={
+                isDark
+                  ? { "&:hover": { background: "rgba(34, 57, 92, 0.8)" } }
+                  : { "&:hover": { background: "rgba(79, 125, 102, 0.8)" } }
+              }
+              onMouseEnter={(e) => {
+                if (isDark) {
+                  e.currentTarget.style.background = "rgba(34, 57, 92, 0.8)";
+                } else {
+                  e.currentTarget.style.background = "rgba(79, 125, 102, 0.8)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+              }}
+              title={language === 'en' ? 'العربية' : 'English'}
+            >
+              <Globe className="h-4 w-4 mr-1" />
+              {language === 'en' ? 'عربي' : 'EN'}
+            </Button>
+
+            {/* Dark Mode Toggle */}
             <Button
               variant="ghost"
               size="sm"
               onClick={toggleDarkMode}
-              className="text-white hover:bg-[#4F7D66]"
+              className="text-white transition-all duration-200"
+              style={
+                isDark
+                  ? { "&:hover": { background: "rgba(34, 57, 92, 0.8)" } }
+                  : { "&:hover": { background: "rgba(79, 125, 102, 0.8)" } }
+              }
+              onMouseEnter={(e) => {
+                if (isDark) {
+                  e.currentTarget.style.background = "rgba(34, 57, 92, 0.8)";
+                } else {
+                  e.currentTarget.style.background = "rgba(79, 125, 102, 0.8)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+              }}
             >
               {isDark ? (
                 <Sun className="h-4 w-4" />
@@ -366,7 +430,22 @@ function Navigation() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-white hover:bg-[#4F7D66]"
+                className="text-white transition-all duration-200"
+                style={
+                  isDark
+                    ? { "&:hover": { background: "rgba(34, 57, 92, 0.8)" } }
+                    : { "&:hover": { background: "rgba(79, 125, 102, 0.8)" } }
+                }
+                onMouseEnter={(e) => {
+                  if (isDark) {
+                    e.currentTarget.style.background = "rgba(34, 57, 92, 0.8)";
+                  } else {
+                    e.currentTarget.style.background = "rgba(79, 125, 102, 0.8)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                }}
               >
                 {isMenuOpen ? (
                   <X className="h-6 w-6" />
@@ -381,12 +460,55 @@ function Navigation() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-[#1C3B2C] border-t border-[#4F7D66]">
+            <div 
+              className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t transition-all duration-400"
+              style={
+                isDark
+                  ? { 
+                      background: "linear-gradient(135deg, #0B1623 0%, #22395c 100%)",
+                      borderColor: "#22395c"
+                    }
+                  : { 
+                      background: "linear-gradient(135deg, #0b3d2e 0%, #4F7D66 100%)",
+                      borderColor: "#4F7D66"
+                    }
+              }
+            >
               {navItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-gray-300 hover:text-white hover:bg-[#4F7D66] block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  className="block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  style={
+                    isDark
+                      ? {
+                          color: "#E5E7EB",
+                          "&:hover": {
+                            color: "#ffffff",
+                            background: "rgba(34, 57, 92, 0.8)"
+                          }
+                        }
+                      : {
+                          color: "#E5E7EB",
+                          "&:hover": {
+                            color: "#ffffff",
+                            background: "rgba(79, 125, 102, 0.8)"
+                          }
+                        }
+                  }
+                  onMouseEnter={(e) => {
+                    if (isDark) {
+                      e.currentTarget.style.color = "#ffffff";
+                      e.currentTarget.style.background = "rgba(34, 57, 92, 0.8)";
+                    } else {
+                      e.currentTarget.style.color = "#ffffff";
+                      e.currentTarget.style.background = "rgba(79, 125, 102, 0.8)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#E5E7EB";
+                    e.currentTarget.style.background = "transparent";
+                  }}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
@@ -401,9 +523,9 @@ function Navigation() {
 }
 
 // WhatsApp Button Component
-function WhatsAppButton() {
+function WhatsAppButton({ t, isDark }) {
   const whatsappNumber = "+905343168831";
-  const message = "Hello! I'm interested in your textile products.";
+  const message = t('whatsappMessage');
   const whatsappUrl = `https://wa.me/${whatsappNumber.replace(
     "+",
     ""
@@ -414,7 +536,35 @@ function WhatsAppButton() {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#20B858] text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 animate-pulse"
+      className="fixed bottom-6 right-6 z-50 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 animate-pulse"
+      style={isDark ? {
+        background: "linear-gradient(135deg, #0B1623 0%, #22395c 100%)",
+        boxShadow: "0 4px 20px rgba(34, 57, 92, 0.4)",
+        border: "2px solid rgba(34, 57, 92, 0.3)"
+      } : {
+        background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
+        boxShadow: "0 4px 20px rgba(37, 211, 102, 0.3)"
+      }}
+      onMouseEnter={e => {
+        if (isDark) {
+          e.currentTarget.style.background = "linear-gradient(135deg, #22395c 0%, #355a8a 100%)";
+          e.currentTarget.style.boxShadow = "0 6px 25px rgba(34, 57, 92, 0.6)";
+          e.currentTarget.style.border = "2px solid rgba(53, 90, 138, 0.5)";
+        } else {
+          e.currentTarget.style.background = "linear-gradient(135deg, #128C7E 0%, #075E54 100%)";
+          e.currentTarget.style.boxShadow = "0 6px 25px rgba(37, 211, 102, 0.4)";
+        }
+      }}
+      onMouseLeave={e => {
+        if (isDark) {
+          e.currentTarget.style.background = "linear-gradient(135deg, #0B1623 0%, #22395c 100%)";
+          e.currentTarget.style.boxShadow = "0 4px 20px rgba(34, 57, 92, 0.4)";
+          e.currentTarget.style.border = "2px solid rgba(34, 57, 92, 0.3)";
+        } else {
+          e.currentTarget.style.background = "linear-gradient(135deg, #25D366 0%, #128C7E 100%)";
+          e.currentTarget.style.boxShadow = "0 4px 20px rgba(37, 211, 102, 0.3)";
+        }
+      }}
     >
       <MessageCircle className="h-6 w-6 animate-bounce" />
     </a>
@@ -422,36 +572,30 @@ function WhatsAppButton() {
 }
 
 // Home Page Component
-function HomePage() {
+function HomePage({ isDark, t }) {
   const navigate = useNavigate();
 
-  const count15 = useCountUp(15);
+  const count20 = useCountUp(20);
   const count10 = useCountUp(10);
   const count50 = useCountUp(50);
   const count90 = useCountUp(90);
 
   const featuredProducts = [
     {
-      name: "Upholstery  Fabrics",
-      description: "Elegant and durable fabrics for furniture and upholstery",
+      name: t('upholsteryFabrics'),
+      description: t('upholsteryDesc'),
       image: upholsteryImg,
       link: "furnishing-fabrics",
     },
     {
-      name: "Cushions",
-      description: "Soft and stylish cushions for comfort and decoration",
-      image: cushionsImg,
-      link: "cushions",
-    },
-    {
-      name: "Carpets",
-      description: "Premium floor coverings and area rugs for modern spaces",
+      name: t('carpets'),
+      description: t('carpetsDesc'),
       image: carpetImg,
       link: "carpets",
     },
     {
-      name: "Curtains",
-      description: "Elegant window treatments and decorative curtains",
+      name: t('curtains'),
+      description: t('curtainsDesc'),
       image: curtainImg,
       link: "curtains",
     },
@@ -462,26 +606,49 @@ function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0D1B2A] transition-all duration-400">
+    <div className="min-h-screen bg-white transition-all duration-400">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-[#1C3B2C] to-[#4F7D66] dark:from-[#081521] dark:to-[#112B3C] text-white py-20 transition-all duration-400">
+      <section
+        className="relative text-white py-20 transition-all duration-400"
+        style={{
+          background: isDark
+            ? "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+            : "linear-gradient(120deg, #0b3d2e 0%, #4F7D66 100%)"
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6 animate-fadeInLeft">
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight text-[#E5E7EB]">
-                Premium Textile Manufacturing
+                {t('heroTitle')}
               </h1>
               <p className="text-xl text-[#E5E7EB] opacity-90">
-                Crafting exceptional fabrics since 2010 with 15+ years of
-                expertise in premium textile production.
+                {t('heroSubtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"
-                  className="bg-[#4F7D66] hover:bg-[#3A5D4D] text-white hover:-translate-y-1 transition-all duration-300"
+                  style={
+                    isDark
+                      ? {
+                          background: "linear-gradient(120deg, #0B1623 0%, #22395c 100%)",
+                          color: "#fff",
+                          fontWeight: "bold",
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+                          border: "none"
+                        }
+                      : {
+                          background: "linear-gradient(120deg, #0b3d2e 0%, #4F7D66 100%)",
+                          color: "#fff",
+                          fontWeight: "bold",
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+                          border: "none"
+                        }
+                  }
+                  className="transition-all duration-300 shadow-md hover:scale-105"
                   onClick={() => (window.location.href = "/catalog")}
                 >
-                  View Full Catalog
+                  {t('viewFullCatalog')}
                 </Button>
                 <a
                   href="https://wa.me/905343168831?text=Hello!%20I'm%20interested%20in%20your%20textile%20products."
@@ -492,11 +659,21 @@ function HomePage() {
                   <Button
                     variant="outline"
                     size="lg"
+                    style={
+                      isDark
+                        ? {
+                            background: "#fff",
+                            color: "#0B1623",
+                            fontWeight: "bold",
+                            border: "none"
+                          }
+                        : {}
+                    }
                     className="border-[#0b3d2e] text-[#0b3d2e] bg-white hover:bg-white hover:text-[#0b3d2e] 
                      dark:text-white dark:border-[#0b3d2e] 
                    hover:scale-105 transition-all duration-300 w-full"
                   >
-                    Contact Us
+                    {t('contact')}
                   </Button>
                 </a>
               </div>
@@ -519,52 +696,95 @@ function HomePage() {
         </div>
       </section>
 
+      
       {/* Statistics Section */}
-      <section className="py-16 bg-gray-50 dark:bg-[#0D1B2A] transition-all duration-400">
+      <section className="py-16 transition-all duration-400"
+        style={{
+          background: isDark
+            ? "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+            : "#f9fafb"
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             <div
-              id="counter-15"
-              className="p-8 bg-white dark:bg-[#112B3C] rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
+              id="counter-20"
+              className="p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
+              style={isDark ? {
+                background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
+                border: "1.5px solid rgba(79,125,102,0.18)",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
+              } : {
+                background: "#fff",
+                border: "1.5px solid #e5e7eb",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.08)"
+              }}
             >
-              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-[#4F7D66] mb-2">
-                {count15}+
+              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-white mb-2">
+                {count20}+
               </div>
               <div className="text-lg text-gray-600 dark:text-[#E5E7EB]">
-                Years of Experience
+                {t('yearsExperience')}
               </div>
             </div>
             <div
               id="counter-10"
-              className="p-8 bg-white dark:bg-[#112B3C] rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
+              className="p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
+              style={isDark ? {
+                background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
+                border: "1.5px solid rgba(79,125,102,0.18)",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
+              } : {
+                background: "#fff",
+                border: "1.5px solid #e5e7eb",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.08)"
+              }}
             >
-              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-[#4F7D66] mb-2">
+              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-white mb-2">
                 {count10}+
               </div>
               <div className="text-lg text-gray-600 dark:text-[#E5E7EB]">
-                Countries Exported
+                {t('countriesServed')}
               </div>
             </div>
             <div
               id="counter-50"
-              className="p-8 bg-white dark:bg-[#112B3C] rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
+              className="p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
+              style={isDark ? {
+                background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
+                border: "1.5px solid rgba(79,125,102,0.18)",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
+              } : {
+                background: "#fff",
+                border: "1.5px solid #e5e7eb",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.08)"
+              }}
             >
-              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-[#4F7D66] mb-2">
+              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-white mb-2">
                 {count50}+
               </div>
               <div className="text-lg text-gray-600 dark:text-[#E5E7EB]">
-                Products
+                {t('productsAvailable')}
               </div>
             </div>
             <div
               id="counter-90"
-              className="p-8 bg-white dark:bg-[#112B3C] rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
+              className="p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
+              style={isDark ? {
+                background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
+                border: "1.5px solid rgba(79,125,102,0.18)",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
+              } : {
+                background: "#fff",
+                border: "1.5px solid #e5e7eb",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.08)"
+              }}
             >
-              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-[#4F7D66] mb-2">
+              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-white mb-2">
                 {count90}%
               </div>
               <div className="text-lg text-gray-600 dark:text-[#E5E7EB]">
-                Customer Satisfaction
+                {t('customerSatisfaction')}
               </div>
             </div>
           </div>
@@ -572,15 +792,32 @@ function HomePage() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-20 bg-white dark:bg-[#0D1B2A] transition-all duration-400">
+      <section className="py-20 transition-all duration-400"
+        style={{
+          background: isDark
+            ? "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+            : "#fff"
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-4">
-              Our Featured Products
+            <h2 className="text-3xl lg:text-4xl font-bold text-[#0b3d2e] mb-2 drop-shadow"
+              style={isDark ? { color: '#fff' } : {}}
+            >
+              {t('featuredProducts')}
             </h2>
-            <p className="text-lg text-gray-600 dark:text-[#E5E7EB] max-w-2xl mx-auto">
-              Discover our premium collection of textile products, crafted with
-              precision and designed for excellence.
+            <div className="flex justify-center mb-4">
+              <div
+                className="h-1 w-24 rounded-full"
+                style={{
+                  background: "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+                }}
+              ></div>
+            </div>
+            <p className="text-lg font-medium max-w-2xl mx-auto mb-2"
+              style={isDark ? { color: '#fff' } : { color: '#1a202c' }}
+            >
+              {t('featuredProductsSubtitle')}
             </p>
           </div>
 
@@ -588,7 +825,16 @@ function HomePage() {
             {featuredProducts.map((product, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-[#112B3C] rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] animate-fadeInUp stagger-item"
+                className="rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] animate-fadeInUp stagger-item"
+                style={isDark ? {
+                  background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
+                  border: "1.5px solid rgba(79,125,102,0.18)",
+                  boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
+                } : {
+                  background: "#fff",
+                  border: "1.5px solid #e5e7eb",
+                  boxShadow: "0 4px 24px rgba(0,0,0,0.08)"
+                }}
               >
                 <div className="aspect-video overflow-hidden rounded-t-xl">
                   <img
@@ -599,6 +845,7 @@ function HomePage() {
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-[#E5E7EB] mb-2">
+                    {/* نص أبيض في الدارك مود */}
                     {product.name}
                   </h3>
                   <p className="text-gray-600 dark:text-[#E5E7EB] mb-4">
@@ -606,10 +853,24 @@ function HomePage() {
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full border-[#1C3B2C] text-[#1C3B2C] hover:bg-[#1C3B2C] hover:text-white dark:border-[#4F7D66] dark:text-[#4F7D66] dark:hover:bg-[#4F7D66] dark:hover:text-white transition-all duration-300 hover:-translate-y-1"
+                    className="w-full transition-all duration-300 hover:-translate-y-1"
+                    style={isDark ? {
+                      background: "linear-gradient(90deg, #0B1623 0%, #22395c 100%)",
+                      color: "#fff",
+                      border: "1.5px solid #22395c"
+                    } : {
+                      border: "1.5px solid #1C3B2C",
+                      color: "#1C3B2C"
+                    }}
+                    onMouseEnter={e => {
+                      if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #22395c 0%, #355a8a 100%)";
+                    }}
+                    onMouseLeave={e => {
+                      if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #0B1623 0%, #22395c 100%)";
+                    }}
                     onClick={() => handleLearnMore(product.link)}
                   >
-                    Learn More
+                    {t('learnMore')}
                   </Button>
                 </div>
               </div>
@@ -618,11 +879,21 @@ function HomePage() {
 
           <div className="text-center mt-12">
             <Button
-              size="lg"
-              className="bg-[#1C3B2C] hover:bg-[#4F7D66] text-white hover:-translate-y-1 transition-all duration-300"
+              className="font-bold text-white border-none transition-all duration-300 shadow-md hover:scale-105 px-8 py-2 rounded-md"
+              style={isDark ? {
+                background: "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+              } : {
+                background: "linear-gradient(120deg, #0b3d2e 0%, #4F7D66 100%)"
+              }}
+              onMouseEnter={e => {
+                if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #22395c 0%, #355a8a 100%)";
+              }}
+              onMouseLeave={e => {
+                if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #0B1623 0%, #22395c 100%)";
+              }}
               onClick={() => (window.location.href = "/catalog")}
             >
-              View Full Catalog
+              {t('viewFullCatalog')}
             </Button>
           </div>
         </div>
@@ -632,41 +903,42 @@ function HomePage() {
 }
 
 // About Us Page Component
-function AboutPage() {
+function AboutPage({ isDark, t }) {
   const whyChooseUs = [
     {
-      title: "15+ Years Experience",
-      description:
-        "Over a decade of expertise in premium textile manufacturing and export.",
+      title: t('yearsExperienceTitle'),
+      description: t('yearsExperienceDesc'),
     },
     {
-      title: "Premium Jacquard Machines",
-      description:
-        "State-of-the-art machinery ensuring the highest quality fabric production.",
+      title: t('premiumMachinesTitle'),
+      description: t('premiumMachinesDesc'),
     },
     {
-      title: "Trusted by Global Clients",
-      description:
-        "Serving customers across 10+ countries with consistent quality and reliability.",
+      title: t('trustedClientsTitle'),
+      description: t('trustedClientsDesc'),
     },
     {
-      title: "Custom Designs Available",
-      description:
-        "Tailored solutions to meet your specific textile requirements and designs.",
+      title: t('customDesignsTitle'),
+      description: t('customDesignsDesc'),
     },
   ];
 
   return (
-    <div className="min-h-screen py-20 bg-white dark:bg-[#0D1B2A] transition-all duration-400">
+    <div className="min-h-screen py-20 transition-all duration-400"
+      style={{
+        background: isDark
+          ? "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+          : "#fff"
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-6">
-            About BURSA HILAL ÖRME TEKSTİL
+            {t('aboutTitle')}
           </h1>
           <p className="text-xl text-gray-600 dark:text-[#E5E7EB] max-w-3xl mx-auto">
-            A legacy of excellence in textile manufacturing, combining
-            traditional craftsmanship with modern innovation.
+            {t('aboutSubtitle')}
           </p>
         </div>
 
@@ -675,38 +947,19 @@ function AboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6 animate-fadeInLeft">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-[#E5E7EB]">
-                Our Heritage
+                {t('ourHeritage')}
               </h2>
               <p className="text-lg text-gray-600 dark:text-[#E5E7EB] leading-relaxed">
-                With over 65 years of combined experience in the textile
-                industry, BURSA HILAL ÖRME TEKSTİL LTD.ŞTİ has established
-                itself as a premier manufacturer of high-quality fabrics.
-                Founded on the principles of excellence, innovation, and
-                customer satisfaction, we have grown from a small local
-                operation to an internationally recognized textile company.
+                {t('heritageText1')}
               </p>
               <p className="text-lg text-gray-600 dark:text-[#E5E7EB] leading-relaxed">
-                Our journey began with a simple vision: to create exceptional
-                textiles that combine traditional Turkish craftsmanship with
-                modern manufacturing techniques. Today, we proudly serve clients
-                across more than 10 countries, delivering premium fabrics that
-                meet the highest international standards.
+                {t('heritageText2')}
               </p>
               <p className="text-lg text-gray-600 dark:text-[#E5E7EB] leading-relaxed">
-                Located in the heart of Bursa, Turkey's textile capital, we
-                leverage our strategic position to source the finest materials
-                and employ skilled artisans who bring decades of experience to
-                every product we create. Our commitment to quality and
-                innovation has made us a trusted partner for fashion designers,
-                home decor manufacturers, and textile distributors worldwide.
+                {t('heritageText3')}
               </p>
               <p className="text-lg text-gray-600 dark:text-[#E5E7EB] leading-relaxed">
-                As we look to the future, we remain dedicated to pushing the
-                boundaries of textile manufacturing while maintaining the
-                traditional values that have made us successful. Our investment
-                in cutting-edge technology, combined with our respect for
-                time-honored techniques, ensures that every fabric we produce
-                meets the evolving needs of our global clientele.
+                {t('heritageText4')}
               </p>
             </div>
             <div className="relative animate-fadeInRight">
@@ -725,11 +978,10 @@ function AboutPage() {
         <section>
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Why Choose Us
+              {t('whyChooseUs')}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Discover what sets us apart in the competitive world of textile
-              manufacturing.
+              {t('whyChooseUsSubtitle')}
             </p>
           </div>
 
@@ -755,11 +1007,13 @@ function AboutPage() {
 }
 
 // Catalog Page Component
-function CatalogPage() {
+function CatalogPage({ isDark, t }) {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState("furnishing-fabrics");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
 
   useEffect(() => {
     if (location.state?.scrollTo) {
@@ -768,19 +1022,18 @@ function CatalogPage() {
   }, [location.state]);
 
   const sections = [
-    { id: "furnishing-fabrics", name: "Upholstery Fabrics", icon: couchIcon },
-    { id: "cushions", name: "Cushions", icon: cushionIcon },
-    { id: "carpets", name: "Carpets", icon: carpetIcon },
-    { id: "curtains", name: "Curtains", icon: curtainIcon },
+    { id: "furnishing-fabrics", name: t ? t('upholsteryFabrics') : "Upholstery Fabrics", icon: couchIcon },
+    { id: "carpets", name: t ? t('carpets') : "Carpets", icon: carpetIcon },
+    { id: "curtains", name: t ? t('curtains') : "Curtains", icon: curtainIcon },
   ];
 
   const products = {
     "furnishing-fabrics": [
       {
         id: 1,
-        name: "Premium Jacquard Velvet",
+        name: t ? t('premiumJacquardVelvet') : "Premium Jacquard Velvet",
         category: "jacquard",
-        description: "Elegant grey jacquard velvet with sophisticated patterns",
+        description: t ? t('premiumJacquardVelvetDesc') : "Elegant grey jacquard velvet with sophisticated patterns",
         image: fabricSampleImage,
         productId: "JK-002",
         composition: "100% Polyester",
@@ -790,9 +1043,9 @@ function CatalogPage() {
       },
       {
         id: 2,
-        name: "Classic Jacquard Design",
+        name: t ? t('classicJacquardDesign') : "Classic Jacquard Design",
         category: "jacquard",
-        description: "Traditional patterns with modern appeal",
+        description: t ? t('classicJacquardDesignDesc') : "Traditional patterns with modern appeal",
         images: [jakar1, jakar2, jakarGri2],
         image: jakar1,
         productId: "JK-001",
@@ -803,9 +1056,9 @@ function CatalogPage() {
       },
       {
         id: 3,
-        name: "Contemporary Soho Fabric",
+        name: t ? t('contemporarySohoFabric') : "Contemporary Soho Fabric",
         category: "soho",
-        description: "Modern textile for fashion and decor",
+        description: t ? t('contemporarySohoFabricDesc') : "Modern textile for fashion and decor",
         images: [sohoImage],
         image: sohoImage,
         productId: "SH-001",
@@ -815,9 +1068,9 @@ function CatalogPage() {
       },
       {
         id: 4,
-        name: "Urban Soho Collection",
+        name: t ? t('urbanSohoCollection') : "Urban Soho Collection",
         category: "soho",
-        description: "Versatile fabrics for contemporary designs",
+        description: t ? t('urbanSohoCollectionDesc') : "Versatile fabrics for contemporary designs",
         image: soho1Image,
         productId: "SH-002",
         composition: "70% Cotton, 30% Polyester",
@@ -826,9 +1079,9 @@ function CatalogPage() {
       },
       {
         id: 5,
-        name: "Gentle Babyface Cotton",
+        name: t ? t('gentleBabyfaceCotton') : "Gentle Babyface Cotton",
         category: "babyface",
-        description: "Soft and safe fabrics for children",
+        description: t ? t('gentleBabyfaceCottonDesc') : "Soft and safe fabrics for children",
         images: [babyfaceColor1, babyfaceColor2, babyfaceColor3],
         image: babyfaceColor1,
         productId: "BF-001",
@@ -838,9 +1091,9 @@ function CatalogPage() {
       },
       {
         id: 6,
-        name: "Organic Babyface Series",
+        name: t ? t('organicBabyfaceSeries') : "Organic Babyface Series",
         category: "babyface",
-        description: "Natural and hypoallergenic materials",
+        description: t ? t('organicBabyfaceSeriesDesc') : "Natural and hypoallergenic materials",
         image: darkColorTailoring,
         productId: "BF-002",
         composition: "100% Organic Cotton",
@@ -849,9 +1102,9 @@ function CatalogPage() {
       },
       {
         id: 7,
-        name: "Luxury Velvet Makhmal",
+        name: t ? t('luxuryVelvetMakhmal') : "Luxury Velvet Makhmal",
         category: "velvet",
-        description: "Premium velvet fabric for upholstery",
+        description: t ? t('luxuryVelvetMakhmalDesc') : "Premium velvet fabric for upholstery",
         images: [velvet1, velvet2],
         image: velvet1,
         productId: "VM-001",
@@ -861,9 +1114,9 @@ function CatalogPage() {
       },
       {
         id: 8,
-        name: "Soft Nubuck Texture",
+        name: t ? t('softNubuckTexture') : "Soft Nubuck Texture",
         category: "nubuck",
-        description: "Suede-like texture for premium applications",
+        description: t ? t('softNubuckTextureDesc') : "Suede-like texture for premium applications",
         image: nubuk002,
         productId: "NB-001",
         composition: "100% Polyester",
@@ -872,36 +1125,12 @@ function CatalogPage() {
         isNew: true,
       },
     ],
-    cushions: [
-      {
-        id: 9,
-        name: "Decorative Cushion Cover",
-        category: "cushion",
-        description: "Beautiful cushion covers for home decoration",
-        image: decoratedInterior,
-        productId: "CS-001",
-        composition: "100% Cotton",
-        width: "45cm x 45cm",
-        weight: "150 g/m²",
-      },
-      {
-        id: 10,
-        name: "Premium Velvet Cushion",
-        category: "cushion",
-        description: "Luxurious velvet cushions for comfort",
-        image: "/api/placeholder/400/400",
-        productId: "CS-002",
-        composition: "100% Polyester Velvet",
-        width: "50cm x 50cm",
-        weight: "200 g/m²",
-      },
-    ],
     carpets: [
       {
         id: 11,
-        name: "Traditional Prayer Rug",
+        name: t ? t('traditionalPrayerRug') : "Traditional Prayer Rug",
         category: "carpet",
-        description: "Handcrafted prayer rugs with traditional patterns",
+        description: t ? t('traditionalPrayerRugDesc') : "Handcrafted prayer rugs with traditional patterns",
         image: prayer1251,
         productId: "CR-001",
         composition: "100% Wool",
@@ -911,9 +1140,9 @@ function CatalogPage() {
       },
       {
         id: 12,
-        name: "Modern Area Rug",
+        name: t ? t('modernAreaRug') : "Modern Area Rug",
         category: "carpet",
-        description: "Contemporary designs for modern spaces",
+        description: t ? t('modernAreaRugDesc') : "Contemporary designs for modern spaces",
         image: "/api/placeholder/400/400",
         productId: "CR-002",
         composition: "80% Wool, 20% Silk",
@@ -924,9 +1153,9 @@ function CatalogPage() {
     curtains: [
       {
         id: 13,
-        name: "Premium Velvet Curtains",
+        name: t ? t('premiumVelvetCurtains') : "Premium Velvet Curtains",
         category: "curtain",
-        description: "Luxurious velvet curtains for elegant interiors",
+        description: t ? t('premiumVelvetCurtainsDesc') : "Luxurious velvet curtains for elegant interiors",
         image: velvet1,
         productId: "CT-001",
         composition: "100% Polyester Velvet",
@@ -936,9 +1165,9 @@ function CatalogPage() {
       },
       {
         id: 14,
-        name: "Modern Decorative Curtains",
+        name: t ? t('modernDecorativeCurtains') : "Modern Decorative Curtains",
         category: "curtain",
-        description: "Contemporary curtain designs for modern living spaces",
+        description: t ? t('modernDecorativeCurtainsDesc') : "Contemporary curtain designs for modern living spaces",
         image: decoratedInterior,
         productId: "CT-002",
         composition: "85% Polyester, 15% Cotton",
@@ -949,6 +1178,27 @@ function CatalogPage() {
   };
 
   const currentProducts = products[activeSection] || [];
+
+  // استخراج جميع أنواع القماش المتوفرة في القسم الحالي
+  const fabricTypes = Array.from(new Set(currentProducts.map(p => p.category)));
+
+  // دالة ترجمة أسماء فئات الأقمشة
+  const getCategoryDisplayName = (category) => {
+    if (!t) return category.charAt(0).toUpperCase() + category.slice(1);
+    return t(category) || category.charAt(0).toUpperCase() + category.slice(1);
+  };
+
+  // منطق البحث والفلترة
+  const filteredProducts = currentProducts.filter(product => {
+    const search = searchTerm.trim().toLowerCase();
+    const matchesSearch =
+      !search ||
+      (product.productId && product.productId.toLowerCase().includes(search)) ||
+      (product.name && product.name.toLowerCase().includes(search)) ||
+      (product.category && product.category.toLowerCase().includes(search));
+    const matchesCategory = !filterCategory || product.category === filterCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleViewDetails = (product) => {
     setSelectedProduct(product);
@@ -961,30 +1211,80 @@ function CatalogPage() {
   };
 
   return (
-    <div className="min-h-screen py-20 bg-white dark:bg-[#0D1B2A] transition-all duration-400">
+    <div className="min-h-screen py-20 transition-all duration-400"
+      style={{
+        background: isDark
+          ? "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+          : "#fff"
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-6">
-            Fabric Catalog
+            {t ? t('catalogTitle') : "Fabric Catalog"}
           </h1>
           <p className="text-xl text-gray-600 dark:text-[#E5E7EB] max-w-3xl mx-auto">
-            Explore our comprehensive collection of premium textiles, each
-            crafted with precision and attention to detail.
+            {t ? t('catalogSubtitle') : "Explore Our Complete Collection"}
           </p>
         </div>
+        {/* Section Buttons with integrated Search & Filter */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 mb-16">
+          {/* Search & Filter Section */}
+          <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                placeholder={t ? t('searchPlaceholder') : "Search..."}
+                className="w-full sm:w-72 px-4 py-2.5 pr-10 rounded-full border focus:outline-none focus:ring-2 transition-all duration-300"
+                style={{
+                  backgroundColor: isDark ? '#112B3C' : '#ffffff',
+                  borderColor: isDark ? '#22395c' : '#e5e7eb',
+                  color: isDark ? '#E5E7EB' : '#374151',
+                  focusRingColor: isDark ? '#22395c' : '#4F7D66',
+                }}
+              />
+              <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+              </svg>
+            </div>
+            <select
+              value={filterCategory}
+              onChange={e => setFilterCategory(e.target.value)}
+              className="px-4 py-2.5 rounded-full border focus:outline-none focus:ring-2 transition-all duration-300 min-w-32"
+              style={{
+                backgroundColor: isDark ? '#112B3C' : '#ffffff',
+                borderColor: isDark ? '#22395c' : '#e5e7eb',
+                color: isDark ? '#E5E7EB' : '#374151',
+              }}
+            >
+              <option value="">{t ? t('allTypes') : "All"}</option>
+              {fabricTypes.map(type => (
+                <option key={type} value={type}>{getCategoryDisplayName(type)}</option>
+              ))}
+            </select>
+          </div>
 
-        {/* Section Buttons */}
-        <div className="flex flex-wrap justify-center gap-6 mb-16">
-          {sections.map((section) => (
+          {/* Section Buttons */}
+          <div className="flex flex-wrap justify-center gap-4">
+            {sections.map((section) => (
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id)}
               className={`flex items-center px-8 py-4 rounded-lg text-lg font-medium transition-all duration-300 hover:scale-105 ${
                 activeSection === section.id
-                  ? "bg-[#0b3d2e] text-white shadow-lg"
-                  : "bg-white text-[#0b3d2e] border-2 border-[#0b3d2e] hover:bg-[#0b3d2e] hover:text-white dark:bg-[#112B3C] dark:text-[#4F7D66] dark:border-[#4F7D66] dark:hover:bg-[#4F7D66] dark:hover:text-white"
+                  ? "text-white shadow-lg border-none"
+                  : "bg-white text-[#0b3d2e] border-2 border-[#0b3d2e] hover:bg-[#0b3d2e] hover:text-white dark:bg-[#112B3C] dark:text-[#E5E7EB] dark:border-[#22395c] dark:hover:bg-[#22395c] dark:hover:text-white"
               }`}
+              style={
+                activeSection === section.id
+                  ? isDark 
+                    ? { background: "linear-gradient(90deg, #0B1623 0%, #22395c 100%)" }
+                    : { background: "linear-gradient(120deg, #0b3d2e 0%, #4F7D66 100%)" }
+                  : {}
+              }
             >
               <img
                 src={section.icon}
@@ -993,26 +1293,32 @@ function CatalogPage() {
               />
               {section.name}
             </button>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {currentProducts.map((product) => (
+          {filteredProducts.map((product) => (
             <div
               key={product.id}
               className="relative bg-white dark:bg-[#112B3C] rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] animate-fadeInUp"
+              style={isDark ? {
+                background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
+                border: "1.5px solid rgba(79,125,102,0.18)",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
+              } : {}}
             >
               {/* New Label */}
               {product.isNew && (
                 <div className="absolute top-3 left-3 z-10 bg-red-500 text-white px-2 py-1 text-xs font-bold rounded-md shadow-lg">
-                  NEW
+                  {t ? t('new') : "NEW"}
                 </div>
               )}
               {/* Jacquard Label */}
               {product.isJacquard && (
                 <div className="absolute top-3 right-3 z-10 bg-blue-500 text-white px-2 py-1 text-xs font-bold rounded-md shadow-lg">
-                  Jacquard
+                  {t ? t('jacquard') : "Jacquard"}
                 </div>
               )}
               <div className="aspect-video overflow-hidden">
@@ -1036,11 +1342,25 @@ function CatalogPage() {
                 </p>
                 <Button
                   variant="outline"
-                  className="w-full border-[#1C3B2C] text-[#1C3B2C] hover:bg-[#1C3B2C] hover:text-white dark:border-[#4F7D66] dark:text-[#4F7D66] dark:hover:bg-[#4F7D66] dark:hover:text-white transition-all duration-300 hover:-translate-y-1"
+                  className="w-full transition-all duration-300 hover:-translate-y-1"
+                  style={isDark ? {
+                    background: "linear-gradient(90deg, #0B1623 0%, #22395c 100%)",
+                    color: "#fff",
+                    border: "1.5px solid #22395c"
+                  } : {
+                    border: "1.5px solid #1C3B2C",
+                    color: "#1C3B2C"
+                  }}
+                  onMouseEnter={e => {
+                    if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #22395c 0%, #355a8a 100%)";
+                  }}
+                  onMouseLeave={e => {
+                    if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #0B1623 0%, #22395c 100%)";
+                  }}
                   onClick={() => handleViewDetails(product)}
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  View Details
+                  {t ? t('viewDetails') : "View Details"}
                 </Button>
               </div>
             </div>
@@ -1049,55 +1369,61 @@ function CatalogPage() {
       </div>
 
       {/* Product Details Modal */}
-      <ProductDetailsModal
-        product={selectedProduct}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
+              <ProductDetailsModal
+          product={selectedProduct}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          t={t}
+        />
     </div>
   );
 }
 
 // Gallery Page Component
-function GalleryPage() {
+function GalleryPage({ isDark, t }) {
   const galleryImages = [
     {
       id: 1,
-      title: "Company Logo Wall",
-      description: "Our brand identity displayed prominently",
+      title: t('companyLogoWall'),
+      description: t('companyLogoWallDesc'),
       image: BURSA1,
     },
     {
       id: 2,
-      title: "Storefront View",
-      description: "Our modern textile showroom entrance",
+      title: t('storefrontView'),
+      description: t('storefrontViewDesc'),
       image: BURSA2,
     },
     {
       id: 3,
-      title: "Interior Showroom",
-      description: "Inside our fabric display area",
+      title: t('interiorShowroom'),
+      description: t('interiorShowroomDesc'),
       image: BURSA3,
     },
     {
       id: 4,
-      title: "Container & Factory",
-      description: "Our manufacturing and shipping facilities",
+      title: t('containerFactory'),
+      description: t('containerFactoryDesc'),
       image: BURSA4,
     },
   ];
 
   return (
-    <div className="min-h-screen py-20 bg-white dark:bg-[#0D1B2A] transition-all duration-400">
+    <div className="min-h-screen py-20 transition-all duration-400"
+      style={{
+        background: isDark
+          ? "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+          : "#fff"
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-6">
-            Gallery
+            {t('galleryTitle')}
           </h1>
           <p className="text-xl text-gray-600 dark:text-[#E5E7EB] max-w-3xl mx-auto">
-            Take a visual journey through our manufacturing processes,
-            facilities, and premium textile products.
+            {t('gallerySubtitle')}
           </p>
         </div>
 
@@ -1130,7 +1456,7 @@ function GalleryPage() {
 }
 
 // Contact Page Component
-function ContactPage() {
+function ContactPage({ isDark, t }) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -1146,103 +1472,104 @@ function ContactPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission here
+    emailjs.sendForm(
+      'service_xasdjh7', // Service ID
+      'template_hra8d9h', // Template ID الجديد
+      e.target,
+      'u4mYQ-kugz8xDuXcX' // Public Key
+    ).then(
+      (result) => {
+        alert('Message sent successfully!');
+      },
+      (error) => {
+        alert('Failed to send message, please try again.');
+      }
+    );
+    e.target.reset();
   };
 
   return (
-    <div className="min-h-screen py-20 bg-white dark:bg-[#0D1B2A] transition-all duration-400">
+    <div className="min-h-screen py-20 transition-all duration-400"
+      style={{
+        background: isDark
+          ? "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+          : "#fff"
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-6">
-            Contact Us
+            {t('contactTitle')}
           </h1>
           <p className="text-xl text-gray-600 dark:text-[#E5E7EB] max-w-3xl mx-auto">
-            Get in touch with our team for inquiries, orders, or any questions
-            about our premium textile products.
+            {t('contactSubtitle')}
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <div className="bg-white dark:bg-[#112B3C] p-8 rounded-xl shadow-lg">
+          <div className="bg-white dark:bg-[#112B3C] p-8 rounded-xl shadow-lg"
+            style={isDark ? {
+              background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
+              border: "1.5px solid rgba(79,125,102,0.18)",
+              boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
+            } : {}}
+          >
             <h2 className="text-2xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-6">
-              Send us a Message
+              {t('sendMessage')}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 dark:text-[#E5E7EB] mb-2"
-                >
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4F7D66] focus:border-transparent dark:bg-[#0D1B2A] dark:text-[#E5E7EB]"
-                  required
-                />
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-[#E5E7EB] mb-2">{t('fullName')}</label>
+                <input type="text" id="name" name="from_name" required className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4F7D66] focus:border-transparent dark:bg-[#0D1B2A] dark:text-[#E5E7EB]" />
               </div>
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 dark:text-[#E5E7EB] mb-2"
-                >
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4F7D66] focus:border-transparent dark:bg-[#0D1B2A] dark:text-[#E5E7EB]"
-                  required
-                />
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-[#E5E7EB] mb-2">{t('email')}</label>
+                <input type="email" id="email" name="from_email" required className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4F7D66] focus:border-transparent dark:bg-[#0D1B2A] dark:text-[#E5E7EB]" />
               </div>
               <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-gray-700 dark:text-[#E5E7EB] mb-2"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={6}
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4F7D66] focus:border-transparent dark:bg-[#0D1B2A] dark:text-[#E5E7EB]"
-                  required
-                />
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-[#E5E7EB] mb-2">{t('message')}</label>
+                <textarea id="message" name="message" rows={6} required className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4F7D66] focus:border-transparent dark:bg-[#0D1B2A] dark:text-[#E5E7EB]" />
               </div>
-              <Button
-                type="submit"
-                className="w-full bg-[#1C3B2C] hover:bg-[#4F7D66] text-white py-3 transition-all duration-300"
+              <Button 
+                type="submit" 
+                className="w-full text-white py-3 transition-all duration-300"
+                style={isDark ? {
+                  background: "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+                } : {
+                  background: "linear-gradient(120deg, #0b3d2e 0%, #4F7D66 100%)"
+                }}
+                onMouseEnter={e => {
+                  if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #22395c 0%, #355a8a 100%)";
+                }}
+                onMouseLeave={e => {
+                  if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #0B1623 0%, #22395c 100%)";
+                }}
               >
-                Send Message
+                {t('send')}
               </Button>
             </form>
           </div>
 
           {/* Contact Information */}
           <div className="space-y-8">
-            <div className="bg-white dark:bg-[#112B3C] p-8 rounded-xl shadow-lg">
+            <div className="bg-white dark:bg-[#112B3C] p-8 rounded-xl shadow-lg"
+              style={isDark ? {
+                background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
+                border: "1.5px solid rgba(79,125,102,0.18)",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
+              } : {}}
+            >
               <h2 className="text-2xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-6">
-                Contact Information
+                {t('contactInfo')}
               </h2>
               <div className="space-y-4">
                 <div className="flex items-center">
                   <MapPin className="h-5 w-5 text-[#4F7D66] mr-3" />
                   <div>
                     <p className="font-medium text-gray-900 dark:text-[#E5E7EB]">
-                      Address
+                      {t('address')}
                     </p>
                     <p className="text-gray-600 dark:text-[#E5E7EB]">
                       Küçükbalıklı, 5. Bilgin Sk. No:10, 16250 Osmangazi̇/Bursa
@@ -1253,7 +1580,7 @@ function ContactPage() {
                   <Phone className="h-5 w-5 text-[#4F7D66] mr-3" />
                   <div>
                     <p className="font-medium text-gray-900 dark:text-[#E5E7EB]">
-                      Phone
+                      {t('phone')}
                     </p>
                     <a
                       href="tel:+905343168831"
@@ -1267,7 +1594,7 @@ function ContactPage() {
                   <Phone className="h-5 w-5 text-[#4F7D66] mr-3" />
                   <div>
                     <p className="font-medium text-gray-900 dark:text-[#E5E7EB]">
-                      Phone
+                      {t('phone')}
                     </p>
                     <a
                       href="tel:+905380351773"
@@ -1281,7 +1608,7 @@ function ContactPage() {
                   <Mail className="h-5 w-5 text-[#4F7D66] mr-3" />
                   <div>
                     <p className="font-medium text-gray-900 dark:text-[#E5E7EB]">
-                      Email
+                      {t('email')}
                     </p>
                     <a
                       href="mailto:info@bursahilal.com"
@@ -1295,16 +1622,14 @@ function ContactPage() {
             </div>
 
             {/* Google Maps */}
-            <div className="bg-white dark:bg-[#112B3C] p-8 rounded-xl shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-4">
-                Find Us
-              </h3>
+            <div className="bg-white dark:bg-[#112B3C] p-8 rounded-xl shadow-lg mt-8">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-4">Find Us</h3>
               <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3048.4!2d29.0!3d40.2!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDEyJzAwLjAiTiAyOcKwMDAnMDAuMCJF!5e0!3m2!1sen!2str!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3046.7534180371867!2d29.084037699999996!3d40.2145477!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14ca3f8dbf5b6da9%3A0x5b93dfe302ff42e0!2z2KjZiNi12Kcg2YfZhNin2YQgQlVSU0EgSElMQUw!5e0!3m2!1sar!2str!4v1753362399993!5m2!1sar!2str"
                   width="100%"
                   height="100%"
-                  style={{ border: 0 }}
+                  style={{ border: 0, borderRadius: '0.75rem' }}
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -1320,9 +1645,15 @@ function ContactPage() {
 }
 
 // Footer Component
-function Footer() {
+function Footer({ isDark, t }) {
   return (
-    <footer className="bg-[#1C3B2C] dark:bg-[#081521] text-white py-12 transition-all duration-400">
+    <footer className="text-white py-12 transition-all duration-400"
+      style={isDark ? {
+        background: "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+      } : {
+        background: "linear-gradient(120deg, #0b3d2e 0%, #4F7D66 100%)"
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -1334,58 +1665,55 @@ function Footer() {
                 className="w-10 h-10 object-contain rounded-lg mr-3"
               />
               <div>
-                <div className="text-lg font-semibold">BURSA HILAL ÖRME</div>
-                <div className="text-sm opacity-80">TEKSTİL LTD.ŞTİ</div>
+                <div className="text-lg font-semibold text-white drop-shadow-md">BURSA HILAL ÖRME</div>
+                <div className="text-sm opacity-90 text-white drop-shadow">TEKSTİL LTD.ŞTİ</div>
               </div>
             </div>
-            <p className="text-gray-300 mb-4 max-w-md">
-              Premium textile manufacturing with 15+ years of expertise. Serving
-              clients worldwide with exceptional quality and innovation.
-            </p>
+            <p className="mb-4 max-w-md text-white opacity-95 drop-shadow">{t('companyDescription')}</p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white drop-shadow-md">{t('quickLinks')}</h3>
             <ul className="space-y-2">
               <li>
                 <a
                   href="/"
-                  className="text-gray-300 hover:text-white transition-colors"
+                  className="text-white hover:text-[#FFD700] transition-colors drop-shadow"
                 >
-                  Home
+                  {t('home')}
                 </a>
               </li>
               <li>
                 <a
                   href="/about"
-                  className="text-gray-300 hover:text-white transition-colors"
+                  className="text-white hover:text-[#FFD700] transition-colors drop-shadow"
                 >
-                  About Us
+                  {t('about')}
                 </a>
               </li>
               <li>
                 <a
                   href="/catalog"
-                  className="text-gray-300 hover:text-white transition-colors"
+                  className="text-white hover:text-[#FFD700] transition-colors drop-shadow"
                 >
-                  Fabric Catalog
+                  {t('catalog')}
                 </a>
               </li>
               <li>
                 <a
                   href="/gallery"
-                  className="text-gray-300 hover:text-white transition-colors"
+                  className="text-white hover:text-[#FFD700] transition-colors drop-shadow"
                 >
-                  Gallery
+                  {t('gallery')}
                 </a>
               </li>
               <li>
                 <a
                   href="/contact"
-                  className="text-gray-300 hover:text-white transition-colors"
+                  className="text-white hover:text-[#FFD700] transition-colors drop-shadow"
                 >
-                  Contact
+                  {t('contact')}
                 </a>
               </li>
             </ul>
@@ -1393,26 +1721,23 @@ function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact</h3>
-            <div className="space-y-2 text-gray-300">
+            <h3 className="text-lg font-semibold mb-4 text-white drop-shadow-md">{t('contact')}</h3>
+            <div className="space-y-2 text-white">
               <a
                 href="https://maps.app.goo.gl/btQ1xjfyhzsRtj2c2"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#4F7D66] hover:text-white transition-colors flex items-center mt-3"
+                className="text-white hover:text-[#FFD700] transition-colors flex items-center mt-3 drop-shadow"
               >
                 <MapPin className="h-4 w-4 mr-2" />
                 <span className="leading-6">
-                  Küçükbalıklı, 5. Bilgin Sk. No:10,
-                  <br />
-                  16250 Osmangazi/Bursa
+                  Küçükbalıklı, 5. Bilgin Sk. No:10,<br />16250 Osmangazi/Bursa
                 </span>
               </a>
-
               <div className="space-y-3">
                 <a
                   href="tel:+905380351773"
-                  className="flex items-center text-[#4F7D66] hover:text-[#25D366] transition-colors bg-white/10 rounded-lg p-3 hover:bg-white/20"
+                  className="flex items-center text-white hover:text-[#25D366] transition-colors bg-white/10 rounded-lg p-3 hover:bg-white/20 drop-shadow"
                 >
                   <Phone className="h-4 w-4 mr-2" />
                   <div>
@@ -1422,7 +1747,7 @@ function Footer() {
                 </a>
                 <a
                   href="tel:+905343168831"
-                  className="flex items-center text-[#4F7D66] hover:text-[#25D366] transition-colors bg-white/10 rounded-lg p-3 hover:bg-white/20"
+                  className="flex items-center text-white hover:text-[#25D366] transition-colors bg-white/10 rounded-lg p-3 hover:bg-white/20 drop-shadow"
                 >
                   <Phone className="h-4 w-4 mr-2" />
                   <div>
@@ -1433,7 +1758,7 @@ function Footer() {
               </div>
               <a
                 href="mailto:info@bursahilal.com"
-                className="text-[#4F7D66] hover:text-white transition-colors flex items-center mt-3"
+                className="text-white hover:text-[#FFD700] transition-colors flex items-center mt-3 drop-shadow"
               >
                 <Mail className="h-4 w-4 mr-2" />
                 info@bursahilal.com
@@ -1441,32 +1766,367 @@ function Footer() {
             </div>
           </div>
         </div>
-
-        <div className="border-t border-gray-600 mt-8 pt-8 text-center">
-          <p className="text-gray-300">
-            © 2024 BURSA HILAL ÖRME TEKSTİL LTD.ŞTİ. All rights reserved.
-          </p>
+        <div className="border-t border-gray-300 mt-8 pt-8 text-center">
+          <p className="text-white opacity-90 drop-shadow">© 2024 BURSA HILAL ÖRME TEKSTİL LTD.ŞTİ. {t('allRightsReserved')}</p>
         </div>
       </div>
     </footer>
   );
 }
 
+
+
+// Translation System
+const translations = {
+  en: {
+    // Navigation
+    home: "Home",
+    about: "About",
+    catalog: "Catalog",
+    gallery: "Gallery",
+    contact: "Contact",
+    
+    // Hero Section
+    heroTitle: "Premium Textile Manufacturing",
+    heroSubtitle: "Crafting exceptional fabrics since 2005 with 20+ years of expertise in textile manufacturing and distribution.",
+    learnMore: "Learn More",
+    
+    // Statistics
+    yearsExperience: "20+ Years of Experience",
+    countriesServed: "10+ Countries Served",
+    productsAvailable: "50+ Products Available",
+    customerSatisfaction: "90% Customer Satisfaction",
+    
+    // Featured Products
+    featuredProducts: "Our Featured Products",
+    featuredProductsSubtitle: "Discover our premium collection of textile products, crafted with precision and designed for excellence.",
+    viewFullCatalog: "View Full Catalog",
+    
+    // Product Names
+    upholsteryFabrics: "Upholstery Fabrics",
+    carpets: "Carpets",
+    curtains: "Curtains",
+    
+    // Product Titles
+    premiumJacquardVelvet: "Premium Jacquard Velvet",
+    classicJacquardDesign: "Classic Jacquard Design",
+    contemporarySohoFabric: "Contemporary Soho Fabric",
+    urbanSohoCollection: "Urban Soho Collection",
+    gentleBabyfaceCotton: "Gentle Babyface Cotton",
+    organicBabyfaceSeries: "Organic Babyface Series",
+    luxuryVelvetMakhmal: "Luxury Velvet Makhmal",
+    softNubuckTexture: "Soft Nubuck Texture",
+    traditionalPrayerRug: "Traditional Prayer Rug",
+    modernAreaRug: "Modern Area Rug",
+    premiumVelvetCurtains: "Premium Velvet Curtains",
+    modernDecorativeCurtains: "Modern Decorative Curtains",
+    
+    // Product Descriptions
+    upholsteryDesc: "Elegant and durable fabrics for furniture and upholstery",
+    carpetsDesc: "Premium floor coverings and area rugs for modern spaces",
+    curtainsDesc: "Elegant window treatments and decorative curtains",
+    
+    // Product Descriptions
+    premiumJacquardVelvetDesc: "Elegant grey jacquard velvet with sophisticated patterns",
+    classicJacquardDesignDesc: "Traditional patterns with modern appeal",
+    contemporarySohoFabricDesc: "Modern textile for fashion and decor",
+    urbanSohoCollectionDesc: "Versatile fabrics for contemporary designs",
+    gentleBabyfaceCottonDesc: "Soft and safe fabrics for children",
+    organicBabyfaceSeriesDesc: "Natural and hypoallergenic materials",
+    luxuryVelvetMakhmalDesc: "Premium velvet fabric for upholstery",
+    softNubuckTextureDesc: "Suede-like texture for premium applications",
+    traditionalPrayerRugDesc: "Handcrafted prayer rugs with traditional patterns",
+    modernAreaRugDesc: "Contemporary designs for modern spaces",
+    premiumVelvetCurtainsDesc: "Luxurious velvet curtains for elegant interiors",
+    modernDecorativeCurtainsDesc: "Contemporary curtain designs for modern living spaces",
+    
+    // About Page
+    aboutTitle: "About Bursa Hilal Tekstil",
+    aboutSubtitle: "Your Trusted Partner in Premium Textile Manufacturing",
+    aboutDescription: "Founded in 2010, Bursa Hilal Tekstil has been at the forefront of textile manufacturing, providing high-quality fabrics and materials to customers worldwide. Our commitment to excellence and innovation has made us a trusted name in the industry.",
+    ourHeritage: "Our Heritage",
+    heritageText1: "With over 20 years of experience since 2005, BURSA HILAL ÖRME TEKSTİL LTD.ŞTİ has established itself as a premier manufacturer of high-quality fabrics. Founded on the principles of excellence, innovation, and customer satisfaction, we have grown from a small local operation to an internationally recognized textile company.",
+    heritageText2: "Our journey began with a simple vision: to create exceptional textiles that combine traditional Turkish craftsmanship with modern manufacturing techniques. Today, we proudly serve clients across more than 10 countries, delivering premium fabrics that meet the highest international standards.",
+    heritageText3: "Located in the heart of Bursa, Turkey's textile capital, we leverage our strategic position to source the finest materials and employ skilled artisans who bring decades of experience to every product we create. Our commitment to quality and innovation has made us a trusted partner for fashion designers, home decor manufacturers, and textile distributors worldwide.",
+    heritageText4: "As we look to the future, we remain dedicated to pushing the boundaries of textile manufacturing while maintaining the traditional values that have made us successful. Our investment in cutting-edge technology, combined with our respect for time-honored techniques, ensures that every fabric we produce meets the evolving needs of our global clientele.",
+    whyChooseUs: "Why Choose Us",
+    whyChooseUsSubtitle: "Discover what sets us apart in the competitive world of textile manufacturing.",
+    yearsExperienceTitle: "20+ Years Experience",
+    yearsExperienceDesc: "Over a decade of expertise in premium textile manufacturing and export.",
+    premiumMachinesTitle: "Premium Jacquard Machines",
+    premiumMachinesDesc: "State-of-the-art machinery ensuring the highest quality fabric production.",
+    trustedClientsTitle: "Trusted by Global Clients",
+    trustedClientsDesc: "Serving customers across 10+ countries with consistent quality and reliability.",
+    customDesignsTitle: "Custom Designs Available",
+    customDesignsDesc: "Tailored solutions to meet your specific textile requirements and designs.",
+    
+    // Gallery Page
+    galleryTitle: "Gallery",
+    gallerySubtitle: "Take a visual journey through our manufacturing processes, facilities, and premium textile products.",
+    companyLogoWall: "Company Logo Wall",
+    companyLogoWallDesc: "Our brand identity displayed prominently",
+    storefrontView: "Storefront View",
+    storefrontViewDesc: "Our modern textile showroom entrance",
+    interiorShowroom: "Interior Showroom",
+    interiorShowroomDesc: "Inside our fabric display area",
+    containerFactory: "Container & Factory",
+    containerFactoryDesc: "Our manufacturing and shipping facilities",
+    
+    // Catalog Page
+    catalogTitle: "Fabric Catalog",
+    catalogSubtitle: "Explore Our Complete Collection",
+    viewDetails: "View Details",
+    
+    // Contact Page
+    contactTitle: "Contact Us",
+    contactSubtitle: "Get in Touch with Our Team",
+    sendMessage: "Send us a Message",
+    fullName: "Full Name",
+    email: "Email Address",
+    message: "Message",
+    send: "Send Message",
+    contactInfo: "Contact Information",
+    address: "Address",
+    phone: "Phone",
+    workingHours: "Working Hours",
+    
+    // Footer
+    quickLinks: "Quick Links",
+    companyDescription: "Premium textile manufacturing with 15+ years of expertise. Serving clients worldwide with exceptional quality and innovation.",
+    allRightsReserved: "All rights reserved.",
+    
+    // Product Details
+    productId: "Product ID",
+    composition: "Composition",
+    width: "Width",
+    weight: "Weight",
+    category: "Category",
+    description: "Description",
+    jacquard: "Jacquard",
+    velvet: "Velvet",
+    soho: "Soho",
+    babyface: "Babyface",
+    nubuck: "Nubuck",
+    carpet: "Carpet",
+    curtain: "Curtain",
+    new: "NEW",
+    
+    // Modal
+    close: "Close",
+    previous: "Previous",
+    next: "Next",
+    price: "Price",
+    bulkOrderMessage: "If you have a large quantity order, please contact us for a special price.",
+    
+    // WhatsApp
+    whatsappMessage: "Hello! I'm interested in your textile products.",
+    searchPlaceholder: "Search by Product ID, Name, or Type...",
+    allTypes: "All Types",
+  },
+  ar: {
+    // Navigation
+    home: "الرئيسية",
+    about: "من نحن",
+    catalog: "الكتالوج",
+    gallery: "المعرض",
+    contact: "اتصل بنا",
+    
+    // Hero Section
+    heroTitle: "تصنيع المنسوجات المميزة",
+    heroSubtitle: "نصنع الأقمشة الاستثنائية منذ 2005 مع أكثر من 20 عاماً من الخبرة في تصنيع وتوزيع المنسوجات.",
+    learnMore: "اعرف المزيد",
+    
+    // Statistics
+    yearsExperience: "20+ سنوات من الخبرة",
+    countriesServed: "10+ دولة نخدمها",
+    productsAvailable: "50+ منتج متاح",
+    customerSatisfaction: "90% رضا العملاء",
+    
+    // Featured Products
+    featuredProducts: "منتجاتنا المميزة",
+    featuredProductsSubtitle: "اكتشف مجموعتنا المميزة من المنتجات النسيجية، المصنوعة بدقة ومصممة للتميز.",
+    viewFullCatalog: "عرض الكتالوج الكامل",
+    
+    // Product Names
+    upholsteryFabrics: "أقمشة الأثاث",
+    carpets: "السجاد",
+    curtains: "الستائر",
+    
+    // Product Titles
+    premiumJacquardVelvet: "مخمل جاكار مميز",
+    classicJacquardDesign: "تصميم جاكار كلاسيكي",
+    contemporarySohoFabric: "قماش سوهو معاصر",
+    urbanSohoCollection: "مجموعة سوهو الحضرية",
+    gentleBabyfaceCotton: "قطن بيبي فيس الناعم",
+    organicBabyfaceSeries: "سلسلة بيبي فيس العضوية",
+    luxuryVelvetMakhmal: "مخمل فاخر",
+    softNubuckTexture: "نسيج نوباك الناعم",
+    traditionalPrayerRug: "سجادة صلاة تقليدية",
+    modernAreaRug: "سجادة منطقة عصرية",
+    premiumVelvetCurtains: "ستائر مخمل فاخرة",
+    modernDecorativeCurtains: "ستائر زخرفية عصرية",
+    
+    // Product Descriptions
+    upholsteryDesc: "أقمشة أنيقة ومتينة للأثاث والتنجيد",
+    carpetsDesc: "أغطية أرضية مميزة وسجاد للمساحات الحديثة",
+    curtainsDesc: "معالجات نوافذ أنيقة وستائر زخرفية",
+    
+    // Product Descriptions
+    premiumJacquardVelvetDesc: "مخمل جاكار رمادي أنيق مع أنماط متطورة",
+    classicJacquardDesignDesc: "أنماط تقليدية مع جاذبية عصرية",
+    contemporarySohoFabricDesc: "نسيج عصري للأزياء والديكور",
+    urbanSohoCollectionDesc: "أقمشة متعددة الاستخدامات للتصاميم المعاصرة",
+    gentleBabyfaceCottonDesc: "أقمشة ناعمة وآمنة للأطفال",
+    organicBabyfaceSeriesDesc: "مواد طبيعية وغير مسببة للحساسية",
+    luxuryVelvetMakhmalDesc: "قماش مخمل فاخر للتنجيد",
+    softNubuckTextureDesc: "نسيج يشبه الجلد المدبوغ للتطبيقات الفاخرة",
+    traditionalPrayerRugDesc: "سجاد صلاة يدوي الصنع مع أنماط تقليدية",
+    modernAreaRugDesc: "تصاميم معاصرة للمساحات الحديثة",
+    premiumVelvetCurtainsDesc: "ستائر مخمل فاخرة للديكورات الأنيقة",
+    modernDecorativeCurtainsDesc: "تصاميم ستائر معاصرة لمساحات المعيشة الحديثة",
+    
+    // About Page
+    aboutTitle: "عن برصة هلال تكستيل",
+    aboutSubtitle: "شريكك الموثوق في تصنيع المنسوجات المميزة",
+    aboutDescription: "تأسست برصة هلال تكستيل في عام 2010، وكانت في طليعة تصنيع المنسوجات، حيث توفر أقمشة ومواد عالية الجودة للعملاء في جميع أنحاء العالم. التزامنا بالتميز والابتكار جعلنا اسماً موثوقاً في الصناعة.",
+    ourHeritage: "تراثنا",
+    heritageText1: "مع أكثر من 20 عاماً من الخبرة منذ عام 2005، أثبتت برصة هلال أورمة تكستيل أنها مصنع رائد للأقمشة عالية الجودة. تأسست على مبادئ التميز والابتكار ورضا العملاء، نمت من عملية محلية صغيرة إلى شركة منسوجات معترف بها دولياً.",
+    heritageText2: "بدأت رحلتنا برؤية بسيطة: خلق منسوجات استثنائية تجمع بين الحرفية التركية التقليدية وتقنيات التصنيع الحديثة. اليوم، نخدم بفخر عملاء في أكثر من 10 دول، ونوفر أقمشة مميزة تلبي أعلى المعايير الدولية.",
+    heritageText3: "تقع في قلب برصة، عاصمة المنسوجات التركية، نستفيد من موقعنا الاستراتيجي للحصول على أفضل المواد وتوظيف حرفيين ماهرين يجلبون عقوداً من الخبرة لكل منتج نصنعه. التزامنا بالجودة والابتكار جعلنا شريكاً موثوقاً لمصممي الأزياء ومصنعي ديكور المنازل وموزعي المنسوجات في جميع أنحاء العالم.",
+    heritageText4: "بينما نتطلع إلى المستقبل، نحافظ على التزامنا بدفع حدود تصنيع المنسوجات مع الحفاظ على القيم التقليدية التي جعلتنا ناجحين. استثمارنا في التكنولوجيا المتطورة، جنباً إلى جنب مع احترامنا للتقنيات التقليدية، يضمن أن كل قماش ننتجه يلبي الاحتياجات المتطورة لعملائنا العالميين.",
+    whyChooseUs: "لماذا تختارنا",
+    whyChooseUsSubtitle: "اكتشف ما يميزنا في عالم تصنيع المنسوجات التنافسي.",
+    yearsExperienceTitle: "20+ سنوات من الخبرة",
+    yearsExperienceDesc: "أكثر من عقد من الخبرة في تصنيع وتصدير المنسوجات المميزة.",
+    premiumMachinesTitle: "آلات جاكار مميزة",
+    premiumMachinesDesc: "آلات متطورة تضمن أعلى جودة في إنتاج الأقمشة.",
+    trustedClientsTitle: "موثوق به من قبل العملاء العالميين",
+    trustedClientsDesc: "نخدم العملاء في أكثر من 10 دول بجودة وموثوقية ثابتة.",
+    customDesignsTitle: "تصاميم مخصصة متاحة",
+    customDesignsDesc: "حلول مصممة خصيصاً لتلبية متطلبات وتصاميم المنسوجات الخاصة بك.",
+    
+    // Gallery Page
+    galleryTitle: "المعرض",
+    gallerySubtitle: "انطلق في رحلة بصرية عبر عمليات التصنيع والمرافق ومنتجات المنسوجات المميزة.",
+    companyLogoWall: "جدار شعار الشركة",
+    companyLogoWallDesc: "هوية علامتنا التجارية معروضة بشكل بارز",
+    storefrontView: "منظر الواجهة الأمامية",
+    storefrontViewDesc: "مدخل معرض المنسوجات الحديث",
+    interiorShowroom: "المعرض الداخلي",
+    interiorShowroomDesc: "داخل منطقة عرض الأقمشة",
+    containerFactory: "الحاويات والمصنع",
+    containerFactoryDesc: "مرافق التصنيع والشحن",
+    
+    // Catalog Page
+    catalogTitle: "كتالوج الأقمشة",
+    catalogSubtitle: "استكشف مجموعتنا الكاملة",
+    viewDetails: "عرض التفاصيل",
+    
+    // Contact Page
+    contactTitle: "اتصل بنا",
+    contactSubtitle: "تواصل مع فريقنا",
+    sendMessage: "أرسل لنا رسالة",
+    fullName: "الاسم الكامل",
+    email: "البريد الإلكتروني",
+    message: "الرسالة",
+    send: "إرسال الرسالة",
+    contactInfo: "معلومات الاتصال",
+    address: "العنوان",
+    phone: "الهاتف",
+    workingHours: "ساعات العمل",
+    
+    // Footer
+    quickLinks: "روابط سريعة",
+    companyDescription: "تصنيع منسوجات مميزة مع أكثر من 15 عاماً من الخبرة. نخدم العملاء في جميع أنحاء العالم بجودة استثنائية وابتكار.",
+    allRightsReserved: "جميع الحقوق محفوظة.",
+    
+    // Product Details
+    productId: "رقم المنتج",
+    composition: "التركيب",
+    width: "العرض",
+    weight: "الوزن",
+    category: "الفئة",
+    description: "الوصف",
+    jacquard: "جاكار",
+    velvet: "مخمل",
+    soho: "سوهو",
+    babyface: "بيبي فيس",
+    nubuck: "نوباك",
+    carpet: "سجادة",
+    curtain: "ستارة",
+    new: "جديد",
+    
+    // Modal
+    close: "إغلاق",
+    previous: "السابق",
+    next: "التالي",
+    price: "السعر",
+    bulkOrderMessage: "إذا كان لديك طلب بكمية كبيرة، يرجى الاتصال بنا للحصول على سعر خاص.",
+    
+    // WhatsApp
+    whatsappMessage: "مرحباً! أنا مهتم بمنتجاتكم النسيجية.",
+    searchPlaceholder: "ابحث برقم الكتالوج أو الاسم أو النوع...",
+    allTypes: "كل الأنواع",
+  }
+};
+
+// Language Management Hook
+function useLanguage() {
+  const [language, setLanguage] = useState(() => {
+    const savedLang = localStorage.getItem('language');
+    return savedLang || 'en';
+  });
+
+  const toggleLanguage = () => {
+    const newLang = language === 'en' ? 'ar' : 'en';
+    setLanguage(newLang);
+    localStorage.setItem('language', newLang);
+    
+    // Update document direction for RTL support
+    if (newLang === 'ar') {
+      document.documentElement.dir = 'rtl';
+      document.documentElement.lang = 'ar';
+    } else {
+      document.documentElement.dir = 'ltr';
+      document.documentElement.lang = 'en';
+    }
+  };
+
+  const t = (key) => {
+    return translations[language][key] || key;
+  };
+
+  useEffect(() => {
+    // Set initial direction
+    if (language === 'ar') {
+      document.documentElement.dir = 'rtl';
+      document.documentElement.lang = 'ar';
+    } else {
+      document.documentElement.dir = 'ltr';
+      document.documentElement.lang = 'en';
+    }
+  }, [language]);
+
+  return { language, toggleLanguage, t };
+}
+
 // Main App Component
 function App() {
+  const [isDark, toggleDarkMode] = useDarkMode();
+  const { language, toggleLanguage, t } = useLanguage();
   return (
     <Router>
-      <div className="App">
-        <Navigation />
+      <div key={`theme-${isDark}`} className={`min-h-screen transition-all duration-400 ${isDark ? 'dark' : ''}`}>
+        <Navigation key={`nav-${isDark}`} language={language} toggleLanguage={toggleLanguage} t={t} isDark={isDark} toggleDarkMode={toggleDarkMode} />
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/catalog" element={<CatalogPage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/" element={<HomePage key={`home-${isDark}`} isDark={isDark} t={t} />} />
+          <Route path="/about" element={<AboutPage key={`about-${isDark}`} isDark={isDark} t={t} />} />
+          <Route path="/catalog" element={<CatalogPage key={`catalog-${isDark}`} isDark={isDark} t={t} />} />
+          <Route path="/gallery" element={<GalleryPage key={`gallery-${isDark}`} isDark={isDark} t={t} />} />
+          <Route path="/contact" element={<ContactPage key={`contact-${isDark}`} isDark={isDark} t={t} />} />
         </Routes>
-        <Footer />
-        <WhatsAppButton />
+        <Footer key={`footer-${isDark}`} isDark={isDark} t={t} />
+        <WhatsAppButton key={`whatsapp-${isDark}`} t={t} isDark={isDark} />
       </div>
     </Router>
   );
