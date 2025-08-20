@@ -3,11 +3,71 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    
+    <!-- SEO Meta Tags -->
     <title>BURSA HILAL ÖRME TEKSTİL - Premium Textile Manufacturing</title>
+    <meta name="description" content="Premium textile manufacturing with 20+ years of expertise. High-quality fabrics, upholstery, carpets, and curtains. Serving 10+ countries worldwide." />
+    <meta name="keywords" content="textile, fabric, upholstery, carpet, curtain, manufacturing, Bursa, Turkey" />
+    <meta name="author" content="BURSA HILAL ÖRME TEKSTİL LTD.ŞTİ" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="BURSA HILAL ÖRME TEKSTİL - Premium Textile Manufacturing" />
+    <meta property="og:description" content="Premium textile manufacturing with 20+ years of expertise. High-quality fabrics, upholstery, carpets, and curtains." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yourdomain.com" />
+    <meta property="og:image" content="/assets/logo-512.png" />
+    <meta property="og:site_name" content="BURSA HILAL ÖRME TEKSTİL" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BURSA HILAL ÖRME TEKSTİL" />
+    <meta name="twitter:description" content="Premium textile manufacturing with 20+ years of expertise" />
+    <meta name="twitter:image" content="/assets/logo-512.png" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4F7D66" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Bursa Hilal" />
+    <link rel="apple-touch-icon" href="/assets/logo-192.png" />
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/src/main.jsx" as="script" />
+    <link rel="preload" href="/src/index.css" as="style" />
+    <link rel="preload" href="/assets/logo.avif" as="image" />
+    
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="//api.emailjs.com" />
+    <link rel="dns-prefetch" href="//www.youtube.com" />
+    <link rel="dns-prefetch" href="//www.google.com" />
+    
+    <!-- Performance Meta Tags -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-TileColor" content="#4F7D66" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

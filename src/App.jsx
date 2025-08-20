@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import {
   Menu,
@@ -28,29 +28,93 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button.jsx";
 import WhatsappChatButton from "./components/WhatsappChatButton";
-import emailjs from 'emailjs-com';
+import emailjs from '@emailjs/browser';
 import logoImage from "./assets/logo.avif";
-import fabricSampleImage from "./assets/fabric-sample.jpeg";
+// import fabricSampleImage from "./assets/fabric-sample.jpeg";
 import companyBuildingImage from "./assets/company-building.webp";
 import babyfaceColor1 from "./assets/babyface-color1.jpeg";
 import babyfaceColor2 from "./assets/babyface-color2.jpeg";
 import babyfaceColor3 from "./assets/babyface-color3.jpeg";
 import couchIcon from "./assets/couch.png";
-import cushionIcon from "./assets/cushion.png";
+// import cushionIcon from "./assets/cushion.png";
 import carpetIcon from "./assets/prayer.png";
 import curtainIcon from "./assets/curtain.png";
 // New fabric images
-import jakar1 from "./assets/Jakar-1.jpg";
-import jakar2 from "./assets/Jakar-2.jpg";
-import jakarGri2 from "./assets/Jakar-Gri-2.jpg";
-import sohoImage from "./assets/soho.jpg";
-import soho1Image from "./assets/soho1.jfif";
+import jakar1 from "./assets/JAKAR  (1).jpg";
+import jakar2 from "./assets/JAKAR  (2).jpg";
+import jakar3_1 from "./assets/JAKAR 3 (1).jpeg";
+import jakar3_2 from "./assets/JAKAR 3 (2).jpeg";
+import jakar3 from "./assets/JAKAR  (3).jpg";
+import jakar4 from "./assets/JAKAR  (4).jpg";
+import jakar5 from "./assets/JAKAR  (5).jpg";
+import jakar6 from "./assets/JAKAR  (6).jpg";
+import babyface1_1 from "./assets/Babyface/babyface1 (1).jpeg";
+import babyface1_2 from "./assets/Babyface/babyface1 (2).jpeg";
+import babyface1_3 from "./assets/Babyface/babyface1 (3).jpeg";
+import jakarNew1 from "./assets/jakar/jakar (2).jpeg";
+import jakarNew2 from "./assets/jakar/jakar (3).jpeg";
+import jakarNew3 from "./assets/jakar/jakar 4 (1).jpeg";
+import jakarNew4 from "./assets/jakar/jakar 4 (2).jpeg";
+import jakarNew5 from "./assets/jakar/jakar new  (2).jpeg";
+import jakarNew6 from "./assets/jakar/jakar new  (3).jpeg";
+import jakarNew7 from "./assets/jakar/jakar new  (5).jpeg";
+import jakarNew8 from "./assets/jakar/jakar new  (6).jpeg";
+import jakarNew9 from "./assets/jakar/jakar new 2 (1).jpeg";
+import jakarNew10 from "./assets/jakar/jakar new 2 (2).jpeg";
+import jakarNew11 from "./assets/jakar/jakar new 2 (3).jpeg";
+// import sohoImage from "./assets/soho.jpg";
+// import soho1Image from "./assets/soho1.jfif";
 import darkColorTailoring from "./assets/dark-color-tailoring-leather-tissues-showroom.jpg";
 import velvet1 from "./assets/Velvet1.jpg";
 import velvet2 from "./assets/Velvet2.jpg";
 import nubuk002 from "./assets/nubuk-002.jpg";
 import decoratedInterior from "./assets/decorated-interior-empty-home.jpg";
 import prayer1251 from "./assets/1251.jpg";
+// China fabric images
+import cizgi1 from "./assets/China/cizgi (1).jpeg";
+import cizgi2 from "./assets/China/cizgi (2).jpeg";
+import cizgi3 from "./assets/China/cizgi (3).jpeg";
+import cizgi4 from "./assets/China/cizgi (4).jpeg";
+import buffy1 from "./assets/China/Buffy 1 (1).jpeg";
+import buffy2 from "./assets/China/Buffy 1 (2).jpeg";
+import buffy3 from "./assets/China/Buffy 1 (3).jpeg";
+import buffy2_1 from "./assets/China/Buffy 2  (1).jpeg";
+import buffy2_2 from "./assets/China/Buffy 2  (2).jpeg";
+import buffy2_3 from "./assets/China/Buffy 2  (3).jpeg";
+import buffy2_4 from "./assets/China/Buffy 2  (4).jpeg";
+import buffy3_1 from "./assets/China/Buffy 3 (1).jpeg";
+import buffy3_2 from "./assets/China/Buffy 3 (2).jpeg";
+import buffy3_3 from "./assets/China/Buffy 3 (3).jpeg";
+import bukle1 from "./assets/China/Bukle (1).jpeg";
+import bukle2 from "./assets/China/Bukle (2).jpeg";
+import bukle3 from "./assets/China/Bukle (3).jpeg";
+import bukle4 from "./assets/China/Bukle (4).jpeg";
+import bukle2_1 from "./assets/China/Bukle 2 (2).jpeg";
+import bukle2_2 from "./assets/China/Bukle 2 (3).jpeg";
+import bukle2_3 from "./assets/China/bukle 2 (1).jpeg";
+import bukle2_4 from "./assets/China/bukle 2 (4).jpeg";
+import bukle4_1 from "./assets/China/Bukle 4 (2).jpeg";
+import bukle4_2 from "./assets/China/Bukle 4 (3).jpeg";
+import bukle4_3 from "./assets/China/Bukle 4 (4).jpeg";
+import buffy7_1 from "./assets/China/Buffy 7 (1).jpeg";
+import buffy7_2 from "./assets/China/Buffy 7 (2).jpeg";
+import buffy7_3 from "./assets/China/Buffy 7 (3).jpeg";
+import buffy7_4 from "./assets/China/Buffy 7 (6).jpeg";
+import buffy9_1 from "./assets/China/Buffy 9 (2).jpeg";
+import buffy9_2 from "./assets/China/Buffy 9 (3).jpeg";
+import bukle77_1 from "./assets/China/Bukle 77 (1).jpeg";
+import bukle77_2 from "./assets/China/Bukle 77 (2).jpeg";
+import bukle77_3 from "./assets/China/Bukle 77 (3).jpeg";
+import bukle470_1 from "./assets/China/bukle 470 (1).jpeg";
+import bukle470_2 from "./assets/China/bukle 470 (3).jpeg";
+import bukle470_3 from "./assets/China/bukle 470 (4).jpeg";
+import buffy22_1 from "./assets/China/Buffy 22 (1).jpeg";
+import buffy22_2 from "./assets/China/Buffy 22 (2).jpeg";
+import buffy22_3 from "./assets/China/Buffy 22 (3).jpeg";
+import blackout1 from "./assets/Curtains/Blackout (2).jpeg";
+import blackout2 from "./assets/Curtains/Blackout (3).jpeg";
+import blackout3 from "./assets/Curtains/Blackout (4).jpeg";
+import blackout4 from "./assets/Curtains/Blackout (5).jpeg";
 // Gallery images
 import BURSA1 from "./assets/BURSA1.webp";
 import BURSA2 from "./assets/BURSA2.webp";
@@ -59,7 +123,7 @@ import BURSA4 from "./assets/BURSA4.webp";
 
 import "./App.css";
 import upholsteryImg from "./assets/upholstery.webp";
-import cushionsImg from "./assets/cushions.webp";
+// import cushionsImg from "./assets/cushions.webp";
 import carpetImg from "./assets/carpet.webp";
 import curtainImg from "./assets/Curtains-4k.jpg";
 import { FaWhatsapp } from "react-icons/fa";
@@ -124,19 +188,49 @@ function useCountUp(end, duration = 2000) {
   return count;
 }
 
+// Image Zoom Modal Component
+function ImageZoomModal({ image, isOpen, onClose, alt }) {
+  if (!isOpen || !image) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-90 animate-fadeIn p-8"
+      onClick={onClose}
+    >
+      <div className="relative max-w-lg max-h-[50vh] w-full flex items-center justify-center">
+        <button
+          onClick={onClose}
+          className="absolute -top-2 -right-2 z-10 p-2 bg-black bg-opacity-70 hover:bg-opacity-90 rounded-full transition-all duration-200"
+        >
+          <X className="h-5 w-5 text-white" />
+        </button>
+        <img
+          src={image}
+          alt={alt}
+          className="w-full h-full object-contain rounded-lg shadow-2xl"
+          style={{ maxWidth: '100%', maxHeight: '100%' }}
+          onClick={(e) => e.stopPropagation()}
+        />
+      </div>
+    </div>
+  );
+}
+
 // Product Details Modal Component with Image Carousel
 function ProductDetailsModal({ product, isOpen, onClose, t }) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [_currentImageIndex, setCurrentImageIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
-  const [priceType, setPriceType] = useState("bulk");
-  const price = priceType === "bulk" ? 2.25 : 2.10;
+  const [_priceType, _setPriceType] = useState("bulk");
+  const [zoomedImage, setZoomedImage] = useState(null);
+  const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
+  const _price = product?.price ? parseFloat(product.price.replace('$', '')) : 3.25;
 
   if (!isOpen || !product) return null;
 
   const whatsappNumber = "+905343168831";
   const message = `Hello! I'm interested in your textile product: ${product.name} (${product.productId}). Could you please provide more information?`;
-  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(
+  const _whatsappUrl = `https://wa.me/${whatsappNumber.replace(
     "+",
     ""
   )}?text=${encodeURIComponent(message)}`;
@@ -151,21 +245,31 @@ function ProductDetailsModal({ product, isOpen, onClose, t }) {
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  const handleTouchStart = (e) => {
+  const _handleTouchStart = (e) => {
     setTouchStartX(e.targetTouches[0].clientX);
   };
 
-  const handleTouchMove = (e) => {
+  const _handleTouchMove = (e) => {
     setTouchEndX(e.targetTouches[0].clientX);
   };
 
-  const handleTouchEnd = () => {
+  const _handleTouchEnd = () => {
     if (touchStartX - touchEndX > 50) {
       nextImage(); // Swipe left
     }
     if (touchEndX - touchStartX > 50) {
       prevImage(); // Swipe right
     }
+  };
+
+  const handleImageClick = (imageUrl) => {
+    setZoomedImage(imageUrl);
+    setIsZoomModalOpen(true);
+  };
+
+  const closeZoomModal = () => {
+    setIsZoomModalOpen(false);
+    setZoomedImage(null);
   };
 
   return (
@@ -202,8 +306,10 @@ function ProductDetailsModal({ product, isOpen, onClose, t }) {
                   <img
                     src={img}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                     style={{ borderRadius: '0.75rem', height: '100%' }}
+                    onClick={() => handleImageClick(img)}
+                    title={t ? t('clickToZoom') : "Click to zoom"}
                   />
                 </SwiperSlide>
               ))}
@@ -250,7 +356,21 @@ function ProductDetailsModal({ product, isOpen, onClose, t }) {
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-medium text-gray-900 dark:text-[#E5E7EB]">{t ? t('price') : "Price"}:</span>
-                <span className="text-[#25D366] font-bold">$2.25 /m</span>
+                <div className="text-right">
+                  {product.hasMultipleWeights ? (
+                    <div>
+                      <div className="text-[#25D366] font-bold">{product.price} /m ({product.weight})</div>
+                      <div className="text-[#25D366] font-bold">{product.price2} /m ({product.weight2})</div>
+                    </div>
+                  ) : product.pricePrinted ? (
+                    <div>
+                      <div className="text-[#25D366] font-bold">{product.price} /m ({t ? t('plain') : 'Plain'})</div>
+                      <div className="text-[#25D366] font-bold">{product.pricePrinted} /m ({t ? t('printed') : 'Printed'})</div>
+                    </div>
+                  ) : (
+                    <span className="text-[#25D366] font-bold">{product.price || "$2.25"} /m</span>
+                  )}
+                </div>
               </div>
               <div className="mt-3 flex items-center gap-2 bg-red-50 border border-red-300 rounded px-3 py-2">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path fill="#dc2626" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
@@ -262,6 +382,14 @@ function ProductDetailsModal({ product, isOpen, onClose, t }) {
           </div>
         </div>
       </div>
+
+      {/* Image Zoom Modal */}
+      <ImageZoomModal
+        image={zoomedImage}
+        isOpen={isZoomModalOpen}
+        onClose={closeZoomModal}
+        alt={product.name}
+      />
     </div>
   );
 }
@@ -1034,11 +1162,13 @@ function CatalogPage({ isDark, t }) {
         name: t ? t('premiumJacquardVelvet') : "Premium Jacquard Velvet",
         category: "jacquard",
         description: t ? t('premiumJacquardVelvetDesc') : "Elegant grey jacquard velvet with sophisticated patterns",
-        image: fabricSampleImage,
+        images: [jakarNew5, jakarNew6, jakarNew7, jakarNew8],
+        image: jakarNew5,
         productId: "JK-002",
         composition: "100% Polyester",
         width: "140cm",
-        weight: "280 g/m²",
+        weight: "316 g/m²",
+        price: "$2.80",
         isNew: true,
       },
       {
@@ -1046,39 +1176,73 @@ function CatalogPage({ isDark, t }) {
         name: t ? t('classicJacquardDesign') : "Classic Jacquard Design",
         category: "jacquard",
         description: t ? t('classicJacquardDesignDesc') : "Traditional patterns with modern appeal",
-        images: [jakar1, jakar2, jakarGri2],
+        images: [jakar1, jakar2, jakar3_1, jakar3_2],
         image: jakar1,
         productId: "JK-001",
         composition: "100% Polyester",
-        width: "140cm",
-        weight: "270 g/m²",
+        width: "142cm",
+        weight: "338 g/m²",
+        price: "$3.25",
         isJacquard: true,
       },
       {
         id: 3,
-        name: t ? t('contemporarySohoFabric') : "Contemporary Soho Fabric",
-        category: "soho",
-        description: t ? t('contemporarySohoFabricDesc') : "Modern textile for fashion and decor",
-        images: [sohoImage],
-        image: sohoImage,
-        productId: "SH-001",
-        composition: "65% Cotton, 35% Polyester",
-        width: "150cm",
-        weight: "220 g/m²",
+        name: t ? t('classicJacquardDesign') : "Classic Jacquard Design",
+        category: "jacquard",
+        description: t ? t('classicJacquardDesignDesc') : "Traditional patterns with modern appeal",
+        images: [jakar3, jakar4, jakar5, jakar6],
+        image: jakar3,
+        productId: "JK-003",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "338 g/m²",
+        price: "$3.25",
+        isJacquard: true,
       },
       {
         id: 4,
-        name: t ? t('urbanSohoCollection') : "Urban Soho Collection",
-        category: "soho",
-        description: t ? t('urbanSohoCollectionDesc') : "Versatile fabrics for contemporary designs",
-        image: soho1Image,
-        productId: "SH-002",
-        composition: "70% Cotton, 30% Polyester",
-        width: "150cm",
-        weight: "240 g/m²",
+        name: t ? t('classicJacquardDesign') : "Classic Jacquard Design",
+        category: "jacquard",
+        description: t ? t('classicJacquardDesignDesc') : "Traditional patterns with modern appeal",
+        images: [jakarNew1, jakarNew2, jakarNew3, jakarNew4],
+        image: jakarNew1,
+        productId: "JK-004",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "316 g/m²",
+        price: "$2.80",
+        isJacquard: true,
       },
       {
         id: 5,
+        name: t ? t('classicJacquardDesign') : "Classic Jacquard Design",
+        category: "jacquard",
+        description: t ? t('classicJacquardDesignDesc') : "Traditional patterns with modern appeal",
+        images: [jakarNew9, jakarNew10, jakarNew11],
+        image: jakarNew9,
+        productId: "JK-005",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "281 g/m²",
+        price: "$1.90",
+        isJacquard: true,
+      },
+      {
+        id: 7,
+        name: t ? t('contemporarySohoFabric') : "Contemporary Soho Fabric",
+        category: "soho",
+        description: t ? t('contemporarySohoFabricDesc') : "Modern textile for fashion and decor",
+        images: [babyface1_1, babyface1_2, babyface1_3],
+        image: babyface1_1,
+        productId: "SH-001",
+        composition: "65% Cotton, 35% Polyester",
+        width: "142cm",
+        weight: "316 g/m²",
+        price: "$2.60",
+        pricePrinted: "$3.10",
+      },
+      {
+        id: 8,
         name: t ? t('gentleBabyfaceCotton') : "Gentle Babyface Cotton",
         category: "babyface",
         description: t ? t('gentleBabyfaceCottonDesc') : "Soft and safe fabrics for children",
@@ -1090,7 +1254,7 @@ function CatalogPage({ isDark, t }) {
         weight: "180 g/m²",
       },
       {
-        id: 6,
+        id: 9,
         name: t ? t('organicBabyfaceSeries') : "Organic Babyface Series",
         category: "babyface",
         description: t ? t('organicBabyfaceSeriesDesc') : "Natural and hypoallergenic materials",
@@ -1101,7 +1265,7 @@ function CatalogPage({ isDark, t }) {
         weight: "190 g/m²",
       },
       {
-        id: 7,
+        id: 10,
         name: t ? t('luxuryVelvetMakhmal') : "Luxury Velvet Makhmal",
         category: "velvet",
         description: t ? t('luxuryVelvetMakhmalDesc') : "Premium velvet fabric for upholstery",
@@ -1113,7 +1277,7 @@ function CatalogPage({ isDark, t }) {
         weight: "320 g/m²",
       },
       {
-        id: 8,
+        id: 11,
         name: t ? t('softNubuckTexture') : "Soft Nubuck Texture",
         category: "nubuck",
         description: t ? t('softNubuckTextureDesc') : "Suede-like texture for premium applications",
@@ -1123,6 +1287,204 @@ function CatalogPage({ isDark, t }) {
         width: "140cm",
         weight: "290 g/m²",
         isNew: true,
+      },
+      {
+        id: 12,
+        name: t ? t('chineseCizgiFabric') : "Chinese Cizgi Fabric",
+        category: "cizgi",
+        description: t ? t('chineseCizgiFabricDesc') : "Premium Chinese fabric with elegant patterns and superior quality",
+        images: [cizgi1, cizgi2, cizgi3, cizgi4],
+        image: cizgi1,
+        productId: "CZ-001",
+        composition: "100% Polyester",
+        width: "140cm",
+        weight: "280 g/m²",
+        price: "$2.50",
+        isNew: true,
+        isChinese: true,
+      },
+      {
+        id: 13,
+        name: t ? t('chineseBuffyFabric') : "Chinese Buffy Fabric",
+        category: "buffy",
+        description: t ? t('chineseBuffyFabricDesc') : "Premium Chinese Buffy fabric with two weight options for different applications",
+        images: [buffy1, buffy2, buffy3],
+        image: buffy1,
+        productId: "BF-001",
+        composition: "100% Polyester",
+        width: "140cm",
+        weight: "280 g/m²",
+        weight2: "360 g/m²",
+        price: "$1.57",
+        price2: "$1.80",
+        isNew: true,
+        isChinese: true,
+        hasMultipleWeights: true,
+      },
+      {
+        id: 14,
+        name: t ? t('chineseBuffyFabric2') : "Chinese Buffy Fabric 2",
+        category: "buffy",
+        description: t ? t('chineseBuffyFabric2Desc') : "Premium Chinese Buffy fabric with two weight options for different applications",
+        images: [buffy2_1, buffy2_2, buffy2_3, buffy2_4],
+        image: buffy2_1,
+        productId: "BF-002",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "280 g/m²",
+        weight2: "360 g/m²",
+        price: "$1.57",
+        price2: "$1.80",
+        isNew: true,
+        isChinese: true,
+        hasMultipleWeights: true,
+      },
+      {
+        id: 15,
+        name: t ? t('chineseBuffyFabric3') : "Chinese Buffy Fabric 3",
+        category: "buffy",
+        description: t ? t('chineseBuffyFabric3Desc') : "Premium Chinese Buffy fabric with two weight options for different applications",
+        images: [buffy3_1, buffy3_2, buffy3_3],
+        image: buffy3_1,
+        productId: "BF-003",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "280 g/m²",
+        weight2: "360 g/m²",
+        price: "$1.57",
+        price2: "$1.80",
+        isNew: true,
+        isChinese: true,
+        hasMultipleWeights: true,
+      },
+      {
+        id: 16,
+        name: t ? t('chineseBukleFabric') : "Chinese Bukle Fabric",
+        category: "bukle",
+        description: t ? t('chineseBukleFabricDesc') : "Premium Chinese Bukle fabric with elegant texture and superior quality",
+        images: [bukle1, bukle2, bukle3, bukle4],
+        image: bukle1,
+        productId: "BK-001",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "400 g/m²",
+        price: "$2.30",
+        isNew: true,
+        isChinese: true,
+      },
+      {
+        id: 17,
+        name: t ? t('chineseBukleFabric2') : "Chinese Bukle Fabric 2",
+        category: "bukle",
+        description: t ? t('chineseBukleFabric2Desc') : "Premium Chinese Bukle fabric with elegant texture and superior quality",
+        images: [bukle2_1, bukle2_2, bukle2_3, bukle2_4],
+        image: bukle2_1,
+        productId: "BK-002",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "300 g/m²",
+        price: "$1.63",
+        isNew: true,
+        isChinese: true,
+      },
+      {
+        id: 18,
+        name: t ? t('chineseBukleFabric4') : "Chinese Bukle Fabric 4",
+        category: "bukle",
+        description: t ? t('chineseBukleFabric4Desc') : "Premium Chinese Bukle fabric with elegant texture and superior quality",
+        images: [bukle4_1, bukle4_2, bukle4_3],
+        image: bukle4_1,
+        productId: "BK-003",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "300 g/m²",
+        price: "$1.63",
+        isNew: true,
+        isChinese: true,
+      },
+      {
+        id: 19,
+        name: t ? t('chineseBuffyFabric7') : "Chinese Buffy Fabric 7",
+        category: "buffy",
+        description: t ? t('chineseBuffyFabric7Desc') : "Premium Chinese Buffy fabric with two weight options for different applications",
+        images: [buffy7_1, buffy7_2, buffy7_3, buffy7_4],
+        image: buffy7_1,
+        productId: "BF-004",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "280 g/m²",
+        weight2: "360 g/m²",
+        price: "$1.57",
+        price2: "$1.80",
+        isNew: true,
+        isChinese: true,
+        hasMultipleWeights: true,
+      },
+      {
+        id: 20,
+        name: t ? t('chineseBuffyFabric9') : "Chinese Buffy Fabric 9",
+        category: "buffy",
+        description: t ? t('chineseBuffyFabric9Desc') : "Premium Chinese Buffy fabric with two weight options for different applications",
+        images: [buffy9_1, buffy9_2],
+        image: buffy9_1,
+        productId: "BF-005",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "280 g/m²",
+        weight2: "360 g/m²",
+        price: "$1.57",
+        price2: "$1.80",
+        isNew: true,
+        isChinese: true,
+        hasMultipleWeights: true,
+      },
+      {
+        id: 21,
+        name: t ? t('chineseBukle77Fabric') : "Chinese Bukle 77 Fabric",
+        category: "bukle",
+        description: t ? t('chineseBukle77FabricDesc') : "Premium Chinese Bukle fabric with elegant texture and superior quality",
+        images: [bukle77_1, bukle77_2, bukle77_3],
+        image: bukle77_1,
+        productId: "BK-004",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "300 g/m²",
+        price: "$1.63",
+        isNew: true,
+        isChinese: true,
+      },
+      {
+        id: 22,
+        name: t ? t('chineseBuffyFabric22') : "Chinese Buffy Fabric 22",
+        category: "buffy",
+        description: t ? t('chineseBuffyFabric22Desc') : "Premium Chinese Buffy fabric with two weight options for different applications",
+        images: [buffy22_1, buffy22_2, buffy22_3],
+        image: buffy22_1,
+        productId: "BF-006",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "280 g/m²",
+        weight2: "360 g/m²",
+        price: "$1.57",
+        price2: "$1.80",
+        isNew: true,
+        isChinese: true,
+        hasMultipleWeights: true,
+      },
+      {
+        id: 23,
+        name: t ? t('chineseBukle470Fabric') : "Chinese Bukle 470 Fabric",
+        category: "bukle",
+        description: t ? t('chineseBukle470FabricDesc') : "Premium Chinese Bukle fabric with elegant texture and superior quality",
+        images: [bukle470_1, bukle470_2, bukle470_3],
+        image: bukle470_1,
+        productId: "BK-005",
+        composition: "100% Polyester",
+        width: "142cm",
+        weight: "470 g/m²",
+        price: "$2.25",
+        isNew: true,
+        isChinese: true,
       },
     ],
     carpets: [
@@ -1173,6 +1535,21 @@ function CatalogPage({ isDark, t }) {
         composition: "85% Polyester, 15% Cotton",
         width: "150cm",
         weight: "240 g/m²",
+      },
+      {
+        id: 15,
+        name: t ? t('chineseBlackoutCurtains') : "Chinese Blackout Curtains",
+        category: "blackout",
+        description: t ? t('chineseBlackoutCurtainsDesc') : "Premium Chinese blackout curtains for complete light control",
+        images: [blackout1, blackout2, blackout3, blackout4],
+        image: blackout1,
+        productId: "CT-003",
+        composition: "100% Polyester",
+        width: "310-320cm",
+        weight: "200-300 g/m²",
+        price: "$3.30",
+        isNew: true,
+        isChinese: true,
       },
     ],
   };
@@ -1321,6 +1698,12 @@ function CatalogPage({ isDark, t }) {
                   {t ? t('jacquard') : "Jacquard"}
                 </div>
               )}
+              {/* Chinese Label */}
+              {product.isChinese && (
+                <div className="absolute top-3 right-3 z-10 bg-red-600 text-white px-2 py-1 text-xs font-bold rounded-md shadow-lg">
+                  {t ? t('chinese') : "Chinese"}
+                </div>
+              )}
               <div className="aspect-video overflow-hidden">
                 {product.image &&
                 product.image !== "/api/placeholder/400/400" ? (
@@ -1462,30 +1845,88 @@ function ContactPage({ isDark, t }) {
     email: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [lastSubmissionTime, setLastSubmissionTime] = useState(0);
 
-  const handleInputChange = (e) => {
+  const _handleInputChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
+  // دالة تحقق من صحة البريد الإلكتروني
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // دالة تحقق من صحة الاسم
+  const validateName = (name) => {
+    return name.trim().length >= 2 && name.trim().length <= 100;
+  };
+
+  // دالة تحقق من صحة الرسالة
+  const validateMessage = (message) => {
+    return message.trim().length >= 10 && message.trim().length <= 1000;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Rate Limiting - منع الإرسال المتكرر
+    const now = Date.now();
+    if (isSubmitting) {
+      alert('Please wait, your message is being sent...');
+      return;
+    }
+    
+    if (now - lastSubmissionTime < 30000) { // 30 ثانية
+      alert('Please wait 30 seconds before sending another message.');
+      return;
+    }
+    
+    const formData = new FormData(e.target);
+    const name = formData.get('from_name');
+    const email = formData.get('from_email');
+    const message = formData.get('message');
+
+    // تحقق من المدخلات
+    if (!validateName(name)) {
+      alert('Please enter a valid name (2-100 characters)');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+
+    if (!validateMessage(message)) {
+      alert('Please enter a valid message (10-1000 characters)');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setLastSubmissionTime(now);
+
+    // إرسال الرسالة
     emailjs.sendForm(
       'service_xasdjh7', // Service ID
       'template_hra8d9h', // Template ID الجديد
       e.target,
       'u4mYQ-kugz8xDuXcX' // Public Key
     ).then(
-      (result) => {
+      () => {
         alert('Message sent successfully!');
+        e.target.reset();
+        setIsSubmitting(false);
       },
-      (error) => {
+      () => {
         alert('Failed to send message, please try again.');
+        setIsSubmitting(false);
       }
     );
-    e.target.reset();
   };
 
   return (
@@ -1534,20 +1975,21 @@ function ContactPage({ isDark, t }) {
               </div>
               <Button 
                 type="submit" 
+                disabled={isSubmitting}
                 className="w-full text-white py-3 transition-all duration-300"
                 style={isDark ? {
-                  background: "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
+                  background: isSubmitting ? "#666" : "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
                 } : {
-                  background: "linear-gradient(120deg, #0b3d2e 0%, #4F7D66 100%)"
+                  background: isSubmitting ? "#666" : "linear-gradient(120deg, #0b3d2e 0%, #4F7D66 100%)"
                 }}
                 onMouseEnter={e => {
-                  if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #22395c 0%, #355a8a 100%)";
+                  if (!isSubmitting && isDark) e.currentTarget.style.background = "linear-gradient(90deg, #22395c 0%, #355a8a 100%)";
                 }}
                 onMouseLeave={e => {
-                  if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #0B1623 0%, #22395c 100%)";
+                  if (!isSubmitting && isDark) e.currentTarget.style.background = "linear-gradient(90deg, #0B1623 0%, #22395c 100%)";
                 }}
               >
-                {t('send')}
+                {isSubmitting ? 'Sending...' : t('send')}
               </Button>
             </form>
           </div>
@@ -1767,7 +2209,7 @@ function Footer({ isDark, t }) {
           </div>
         </div>
         <div className="border-t border-gray-300 mt-8 pt-8 text-center">
-          <p className="text-white opacity-90 drop-shadow">© 2024 BURSA HILAL ÖRME TEKSTİL LTD.ŞTİ. {t('allRightsReserved')}</p>
+          <p className="text-white opacity-90 drop-shadow">© 2025 BURSA HILAL ÖRME TEKSTİL LTD.ŞTİ. {t('allRightsReserved')}</p>
         </div>
       </div>
     </footer>
@@ -1816,6 +2258,19 @@ const translations = {
     organicBabyfaceSeries: "Organic Babyface Series",
     luxuryVelvetMakhmal: "Luxury Velvet Makhmal",
     softNubuckTexture: "Soft Nubuck Texture",
+    chineseCizgiFabric: "Chinese Cizgi Fabric",
+    chineseBuffyFabric: "Chinese Buffy Fabric",
+    chineseBuffyFabric2: "Chinese Buffy Fabric",
+    chineseBuffyFabric3: "Chinese Buffy Fabric",
+    chineseBuffyFabric7: "Chinese Buffy Fabric",
+    chineseBuffyFabric9: "Chinese Buffy Fabric",
+    chineseBukle77Fabric: "Chinese Bukle Fabric",
+    chineseBuffyFabric22: "Chinese Buffy Fabric",
+    chineseBlackoutCurtains: "Chinese Blackout Curtains",
+    chineseBukle470Fabric: "Chinese Bukle Fabric",
+    chineseBukleFabric: "Chinese Bukle Fabric",
+    chineseBukleFabric2: "Chinese Bukle Fabric",
+    chineseBukleFabric4: "Chinese Bukle Fabric",
     traditionalPrayerRug: "Traditional Prayer Rug",
     modernAreaRug: "Modern Area Rug",
     premiumVelvetCurtains: "Premium Velvet Curtains",
@@ -1835,6 +2290,19 @@ const translations = {
     organicBabyfaceSeriesDesc: "Natural and hypoallergenic materials",
     luxuryVelvetMakhmalDesc: "Premium velvet fabric for upholstery",
     softNubuckTextureDesc: "Suede-like texture for premium applications",
+    chineseCizgiFabricDesc: "Premium Chinese fabric with elegant patterns and superior quality",
+    chineseBuffyFabricDesc: "Premium Chinese Buffy fabric with two weight options for different applications",
+    chineseBuffyFabric2Desc: "Premium Chinese Buffy fabric with two weight options for different applications",
+    chineseBuffyFabric3Desc: "Premium Chinese Buffy fabric with two weight options for different applications",
+    chineseBuffyFabric7Desc: "Premium Chinese Buffy fabric with two weight options for different applications",
+    chineseBuffyFabric9Desc: "Premium Chinese Buffy fabric with two weight options for different applications",
+    chineseBukle77FabricDesc: "Premium Chinese Bukle fabric with elegant texture and superior quality",
+    chineseBuffyFabric22Desc: "Premium Chinese Buffy fabric with two weight options for different applications",
+    chineseBlackoutCurtainsDesc: "Premium Chinese blackout curtains for complete light control",
+    chineseBukle470FabricDesc: "Premium Chinese Bukle fabric with elegant texture and superior quality",
+    chineseBukleFabricDesc: "Premium Chinese Bukle fabric with elegant texture and superior quality",
+    chineseBukleFabric2Desc: "Premium Chinese Bukle fabric with elegant texture and superior quality",
+    chineseBukleFabric4Desc: "Premium Chinese Bukle fabric with elegant texture and superior quality",
     traditionalPrayerRugDesc: "Handcrafted prayer rugs with traditional patterns",
     modernAreaRugDesc: "Contemporary designs for modern spaces",
     premiumVelvetCurtainsDesc: "Luxurious velvet curtains for elegant interiors",
@@ -1892,7 +2360,7 @@ const translations = {
     
     // Footer
     quickLinks: "Quick Links",
-    companyDescription: "Premium textile manufacturing with 15+ years of expertise. Serving clients worldwide with exceptional quality and innovation.",
+    companyDescription: "Premium textile manufacturing with 20+ years of expertise. Serving clients worldwide with exceptional quality and innovation.",
     allRightsReserved: "All rights reserved.",
     
     // Product Details
@@ -1907,6 +2375,11 @@ const translations = {
     soho: "Soho",
     babyface: "Babyface",
     nubuck: "Nubuck",
+    cizgi: "Cizgi",
+    buffy: "Buffy",
+    bukle: "Bukle",
+    blackout: "Blackout",
+    chinese: "Chinese",
     carpet: "Carpet",
     curtain: "Curtain",
     new: "NEW",
@@ -1916,6 +2389,8 @@ const translations = {
     previous: "Previous",
     next: "Next",
     price: "Price",
+    plain: "Plain",
+    printed: "Printed",
     bulkOrderMessage: "If you have a large quantity order, please contact us for a special price.",
     
     // WhatsApp
@@ -1961,6 +2436,19 @@ const translations = {
     organicBabyfaceSeries: "سلسلة بيبي فيس العضوية",
     luxuryVelvetMakhmal: "مخمل فاخر",
     softNubuckTexture: "نسيج نوباك الناعم",
+    chineseCizgiFabric: "قماش صيني سيزجي",
+    chineseBuffyFabric: "قماش صيني بافي",
+    chineseBuffyFabric2: "قماش صيني بافي",
+    chineseBuffyFabric3: "قماش صيني بافي",
+    chineseBuffyFabric7: "قماش صيني بافي",
+    chineseBuffyFabric9: "قماش صيني بافي",
+    chineseBukle77Fabric: "قماش صيني بوكلي",
+    chineseBuffyFabric22: "قماش صيني بافي",
+    chineseBlackoutCurtains: "ستائر صينية بلاك أوت",
+    chineseBukle470Fabric: "قماش صيني بوكلي",
+    chineseBukleFabric: "قماش صيني بوكلي",
+    chineseBukleFabric2: "قماش صيني بوكلي",
+    chineseBukleFabric4: "قماش صيني بوكلي",
     traditionalPrayerRug: "سجادة صلاة تقليدية",
     modernAreaRug: "سجادة منطقة عصرية",
     premiumVelvetCurtains: "ستائر مخمل فاخرة",
@@ -1980,19 +2468,32 @@ const translations = {
     organicBabyfaceSeriesDesc: "مواد طبيعية وغير مسببة للحساسية",
     luxuryVelvetMakhmalDesc: "قماش مخمل فاخر للتنجيد",
     softNubuckTextureDesc: "نسيج يشبه الجلد المدبوغ للتطبيقات الفاخرة",
+    chineseCizgiFabricDesc: "قماش صيني مميز مع أنماط أنيقة وجودة عالية",
+    chineseBuffyFabricDesc: "قماش صيني بافي مميز مع خيارين للوزن لتطبيقات مختلفة",
+    chineseBuffyFabric2Desc: "قماش صيني بافي مميز مع خيارين للوزن لتطبيقات مختلفة",
+    chineseBuffyFabric3Desc: "قماش صيني بافي مميز مع خيارين للوزن لتطبيقات مختلفة",
+    chineseBuffyFabric7Desc: "قماش صيني بافي مميز مع خيارين للوزن لتطبيقات مختلفة",
+    chineseBuffyFabric9Desc: "قماش صيني بافي مميز مع خيارين للوزن لتطبيقات مختلفة",
+    chineseBukle77FabricDesc: "قماش صيني بوكلي مميز مع نسيج أنيق وجودة عالية",
+    chineseBuffyFabric22Desc: "قماش صيني بافي مميز مع خيارين للوزن لتطبيقات مختلفة",
+    chineseBlackoutCurtainsDesc: "ستائر صينية بلاك أوت مميزة للتحكم الكامل في الضوء",
+    chineseBukle470FabricDesc: "قماش صيني بوكلي مميز مع نسيج أنيق وجودة عالية",
+    chineseBukleFabricDesc: "قماش صيني بوكلي مميز مع نسيج أنيق وجودة عالية",
+    chineseBukleFabric2Desc: "قماش صيني بوكلي مميز مع نسيج أنيق وجودة عالية",
+    chineseBukleFabric4Desc: "قماش صيني بوكلي مميز مع نسيج أنيق وجودة عالية",
     traditionalPrayerRugDesc: "سجاد صلاة يدوي الصنع مع أنماط تقليدية",
     modernAreaRugDesc: "تصاميم معاصرة للمساحات الحديثة",
     premiumVelvetCurtainsDesc: "ستائر مخمل فاخرة للديكورات الأنيقة",
     modernDecorativeCurtainsDesc: "تصاميم ستائر معاصرة لمساحات المعيشة الحديثة",
     
     // About Page
-    aboutTitle: "عن برصة هلال تكستيل",
+    aboutTitle: "عن بورصة هلال تكستيل",
     aboutSubtitle: "شريكك الموثوق في تصنيع المنسوجات المميزة",
-    aboutDescription: "تأسست برصة هلال تكستيل في عام 2010، وكانت في طليعة تصنيع المنسوجات، حيث توفر أقمشة ومواد عالية الجودة للعملاء في جميع أنحاء العالم. التزامنا بالتميز والابتكار جعلنا اسماً موثوقاً في الصناعة.",
+    aboutDescription: "تأسست ال تكستيل في عام 2010، وكانت في طليعة تصنيع المنسوجات، حيث توفر أقمشة ومواد عالية الجودة للعملاء في جميع أنحاء العالم. التزامنا بالتميز والابتكار جعلنا اسماً موثوقاً في الصناعة.",
     ourHeritage: "تراثنا",
-    heritageText1: "مع أكثر من 20 عاماً من الخبرة منذ عام 2005، أثبتت برصة هلال أورمة تكستيل أنها مصنع رائد للأقمشة عالية الجودة. تأسست على مبادئ التميز والابتكار ورضا العملاء، نمت من عملية محلية صغيرة إلى شركة منسوجات معترف بها دولياً.",
+    heritageText1: "مع أكثر من 20 عاماً من الخبرة منذ عام 2005، أثبتت بورصة هلال أورمة تكستيل أنها مصنع رائد للأقمشة عالية الجودة. تأسست على مبادئ التميز والابتكار ورضا العملاء، نمت من عملية محلية صغيرة إلى شركة منسوجات معترف بها دولياً.",
     heritageText2: "بدأت رحلتنا برؤية بسيطة: خلق منسوجات استثنائية تجمع بين الحرفية التركية التقليدية وتقنيات التصنيع الحديثة. اليوم، نخدم بفخر عملاء في أكثر من 10 دول، ونوفر أقمشة مميزة تلبي أعلى المعايير الدولية.",
-    heritageText3: "تقع في قلب برصة، عاصمة المنسوجات التركية، نستفيد من موقعنا الاستراتيجي للحصول على أفضل المواد وتوظيف حرفيين ماهرين يجلبون عقوداً من الخبرة لكل منتج نصنعه. التزامنا بالجودة والابتكار جعلنا شريكاً موثوقاً لمصممي الأزياء ومصنعي ديكور المنازل وموزعي المنسوجات في جميع أنحاء العالم.",
+    heritageText3: "تقع في قلب بورصة، عاصمة المنسوجات التركية، نستفيد من موقعنا الاستراتيجي للحصول على أفضل المواد وتوظيف حرفيين ماهرين يجلبون عقوداً من الخبرة لكل منتج نصنعه. التزامنا بالجودة والابتكار جعلنا شريكاً موثوقاً لمصممي الأزياء ومصنعي ديكور المنازل وموزعي المنسوجات في جميع أنحاء العالم.",
     heritageText4: "بينما نتطلع إلى المستقبل، نحافظ على التزامنا بدفع حدود تصنيع المنسوجات مع الحفاظ على القيم التقليدية التي جعلتنا ناجحين. استثمارنا في التكنولوجيا المتطورة، جنباً إلى جنب مع احترامنا للتقنيات التقليدية، يضمن أن كل قماش ننتجه يلبي الاحتياجات المتطورة لعملائنا العالميين.",
     whyChooseUs: "لماذا تختارنا",
     whyChooseUsSubtitle: "اكتشف ما يميزنا في عالم تصنيع المنسوجات التنافسي.",
@@ -2037,7 +2538,7 @@ const translations = {
     
     // Footer
     quickLinks: "روابط سريعة",
-    companyDescription: "تصنيع منسوجات مميزة مع أكثر من 15 عاماً من الخبرة. نخدم العملاء في جميع أنحاء العالم بجودة استثنائية وابتكار.",
+    companyDescription: "تصنيع منسوجات مميزة مع أكثر من 20 عاماً من الخبرة. نخدم العملاء في جميع أنحاء العالم بجودة استثنائية وابتكار.",
     allRightsReserved: "جميع الحقوق محفوظة.",
     
     // Product Details
@@ -2052,6 +2553,11 @@ const translations = {
     soho: "سوهو",
     babyface: "بيبي فيس",
     nubuck: "نوباك",
+    cizgi: "سيزجي",
+    buffy: "بافي",
+    bukle: "بوكلي",
+    blackout: "بلاك أوت",
+    chinese: "صيني",
     carpet: "سجادة",
     curtain: "ستارة",
     new: "جديد",
@@ -2061,6 +2567,8 @@ const translations = {
     previous: "السابق",
     next: "التالي",
     price: "السعر",
+    plain: "سادة",
+    printed: "مطبوع",
     bulkOrderMessage: "إذا كان لديك طلب بكمية كبيرة، يرجى الاتصال بنا للحصول على سعر خاص.",
     
     // WhatsApp

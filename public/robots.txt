@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# منع الوصول للملفات الحساسة
+Disallow: /_headers
+Disallow: /package.json
+Disallow: /vite.config.js
+Disallow: /eslint.config.js
+
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml
+
