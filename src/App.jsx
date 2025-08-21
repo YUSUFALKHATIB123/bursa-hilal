@@ -115,6 +115,13 @@ import blackout1 from "./assets/Curtains/Blackout (2).jpeg";
 import blackout2 from "./assets/Curtains/Blackout (3).jpeg";
 import blackout3 from "./assets/Curtains/Blackout (4).jpeg";
 import blackout4 from "./assets/Curtains/Blackout (5).jpeg";
+import curtainJakar1 from "./assets/Curtains/jakar  (2).jpeg";
+import curtainJakar2 from "./assets/Curtains/jakar  (3).jpeg";
+import curtainJakar3 from "./assets/Curtains/jakar  (4).jpeg";
+import blackoutNew1 from "./assets/Curtains/BLACK OUT NEW (2).jpeg";
+import blackoutNew2 from "./assets/Curtains/BLACK OUT NEW (3).jpeg";
+import blackoutNew3 from "./assets/Curtains/BLACK OUT NEW (5).jpeg";
+import blackoutNew4 from "./assets/Curtains/BLACK OUT NEW (6).jpeg";
 // Gallery images
 import BURSA1 from "./assets/BURSA1.webp";
 import BURSA2 from "./assets/BURSA2.webp";
@@ -200,7 +207,7 @@ function ImageZoomModal({ image, isOpen, onClose, alt }) {
       <div className="relative max-w-lg max-h-[50vh] w-full flex items-center justify-center">
         <button
           onClick={onClose}
-          className="absolute -top-2 -right-2 z-10 p-2 bg-black bg-opacity-70 hover:bg-opacity-90 rounded-full transition-all duration-200"
+          className="absolute -top-42 -right-2 z-10 p-2 bg-black bg-opacity-70 hover:bg-opacity-90 rounded-full transition-all duration-200"
         >
           <X className="h-5 w-5 text-white" />
         </button>
@@ -357,25 +364,31 @@ function ProductDetailsModal({ product, isOpen, onClose, t }) {
               <div className="flex justify-between items-center">
                 <span className="font-medium text-gray-900 dark:text-[#E5E7EB]">{t ? t('price') : "Price"}:</span>
                 <div className="text-right">
-                  {product.hasMultipleWeights ? (
-                    <div>
-                      <div className="text-[#25D366] font-bold">{product.price} /m ({product.weight})</div>
-                      <div className="text-[#25D366] font-bold">{product.price2} /m ({product.weight2})</div>
-                    </div>
-                  ) : product.pricePrinted ? (
-                    <div>
-                      <div className="text-[#25D366] font-bold">{product.price} /m ({t ? t('plain') : 'Plain'})</div>
-                      <div className="text-[#25D366] font-bold">{product.pricePrinted} /m ({t ? t('printed') : 'Printed'})</div>
-                    </div>
-                  ) : (
-                    <span className="text-[#25D366] font-bold">{product.price || "$2.25"} /m</span>
-                  )}
+                  <span className="text-gray-600 dark:text-[#E5E7EB]">{t ? t('priceOnRequest') : "Price on Request"} <span className="text-[#0b3d2e]">$</span></span>
                 </div>
               </div>
-              <div className="mt-3 flex items-center gap-2 bg-red-50 border border-red-300 rounded px-3 py-2">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path fill="#dc2626" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                <span className="text-red-700 text-sm font-semibold">
-                  {t ? t('bulkOrderMessage') : "If you have a large quantity order, please contact us for a special price."}
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-gray-900 dark:text-[#E5E7EB]">{t ? t('minimumOrder') : "Minimum Order"}:</span>
+                <div className="text-right">
+                  <span className="text-red-600 dark:text-red-400 font-semibold">
+                    {product.isChinese ? (t ? t('containerMinimum') : "Container (Container)") : (t ? t('twoThousandMeters') : "2000 meters")}
+                  </span>
+                </div>
+              </div>
+              {product.opacityLevel && (
+                <div className="flex justify-between items-center">
+                  <span className="font-medium text-gray-900 dark:text-[#E5E7EB]">{t ? t('opacityLevel') : "Opacity Level"}:</span>
+                  <div className="text-right">
+                    <span className="text-blue-600 dark:text-blue-400 font-semibold">
+                      {product.opacityLevel}
+                    </span>
+                  </div>
+                </div>
+              )}
+              <div className="mt-3 flex items-center gap-2 bg-gray-50 border border-gray-300 rounded px-3 py-2">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path fill="#374151" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                <span className="text-gray-700 text-sm font-semibold">
+                  {t ? t('bulkOrderMessage') : "For large orders, we provide special prices and competitive offers – please contact us for details."}
                 </span>
               </div>
             </div>
@@ -1547,9 +1560,36 @@ function CatalogPage({ isDark, t }) {
         composition: "100% Polyester",
         width: "310-320cm",
         weight: "200-300 g/m²",
+        opacityLevel: "100%",
         price: "$3.30",
         isNew: true,
         isChinese: true,
+      },
+      {
+        id: 16,
+        name: t ? t('jacquardCurtains') : "Jacquard Curtains",
+        category: "jacquard",
+        description: t ? t('jacquardCurtainsDesc') : "Elegant jacquard curtains with sophisticated patterns",
+        images: [curtainJakar1, curtainJakar2, curtainJakar3],
+        image: curtainJakar1,
+        productId: "CT-004",
+        composition: "100% Polyester",
+        width: "300cm",
+        weight: "187 g/m²",
+      },
+      {
+        id: 17,
+        name: t ? t('blackoutCurtains') : "Blackout Curtains",
+        category: "blackout",
+        description: t ? t('blackoutCurtainsDesc') : "Premium blackout curtains for complete light control",
+        images: [blackoutNew1, blackoutNew2, blackoutNew3, blackoutNew4],
+        image: blackoutNew1,
+        productId: "CT-005",
+        composition: "100% Polyester",
+        width: "300cm",
+        weight: "233 g/m²",
+        opacityLevel: "70% – 75%",
+        isNew: true,
       },
     ],
   };
@@ -2275,6 +2315,8 @@ const translations = {
     modernAreaRug: "Modern Area Rug",
     premiumVelvetCurtains: "Premium Velvet Curtains",
     modernDecorativeCurtains: "Modern Decorative Curtains",
+    jacquardCurtains: "Jacquard Curtains",
+    blackoutCurtains: "Blackout Curtains",
     
     // Product Descriptions
     upholsteryDesc: "Elegant and durable fabrics for furniture and upholstery",
@@ -2307,6 +2349,8 @@ const translations = {
     modernAreaRugDesc: "Contemporary designs for modern spaces",
     premiumVelvetCurtainsDesc: "Luxurious velvet curtains for elegant interiors",
     modernDecorativeCurtainsDesc: "Contemporary curtain designs for modern living spaces",
+    jacquardCurtainsDesc: "Elegant jacquard curtains with sophisticated patterns",
+    blackoutCurtainsDesc: "Premium blackout curtains for complete light control",
     
     // About Page
     aboutTitle: "About Bursa Hilal Tekstil",
@@ -2389,9 +2433,14 @@ const translations = {
     previous: "Previous",
     next: "Next",
     price: "Price",
+    priceOnRequest: "Price on Request",
+    minimumOrder: "Minimum Order",
+    opacityLevel: "Opacity Level",
+    containerMinimum: "Container (Container)",
+    twoThousandMeters: "2000 meters",
     plain: "Plain",
     printed: "Printed",
-    bulkOrderMessage: "If you have a large quantity order, please contact us for a special price.",
+    bulkOrderMessage: "For large orders, we provide special prices and competitive offers – please contact us for details.",
     
     // WhatsApp
     whatsappMessage: "Hello! I'm interested in your textile products.",
@@ -2453,6 +2502,8 @@ const translations = {
     modernAreaRug: "سجادة منطقة عصرية",
     premiumVelvetCurtains: "ستائر مخمل فاخرة",
     modernDecorativeCurtains: "ستائر زخرفية عصرية",
+    jacquardCurtains: "ستائر جاكار",
+    blackoutCurtains: "ستائر بلاك أوت",
     
     // Product Descriptions
     upholsteryDesc: "أقمشة أنيقة ومتينة للأثاث والتنجيد",
@@ -2485,6 +2536,8 @@ const translations = {
     modernAreaRugDesc: "تصاميم معاصرة للمساحات الحديثة",
     premiumVelvetCurtainsDesc: "ستائر مخمل فاخرة للديكورات الأنيقة",
     modernDecorativeCurtainsDesc: "تصاميم ستائر معاصرة لمساحات المعيشة الحديثة",
+    jacquardCurtainsDesc: "ستائر جاكار أنيقة مع أنماط متطورة",
+    blackoutCurtainsDesc: "ستائر بلاك أوت مميزة للتحكم الكامل في الضوء",
     
     // About Page
     aboutTitle: "عن بورصة هلال تكستيل",
@@ -2567,9 +2620,14 @@ const translations = {
     previous: "السابق",
     next: "التالي",
     price: "السعر",
+    priceOnRequest: "يُحدد عند الطلب",
+    minimumOrder: "الحد الأدنى للطلب",
+    opacityLevel: "درجة التعتيم",
+    containerMinimum: "حاوية (كونتيرا)",
+    twoThousandMeters: "2000 متر",
     plain: "سادة",
     printed: "مطبوع",
-    bulkOrderMessage: "إذا كان لديك طلب بكمية كبيرة، يرجى الاتصال بنا للحصول على سعر خاص.",
+    bulkOrderMessage: "للطلبات الكبيرة، نوفر أسعارًا خاصة وعروضًا تنافسية – يرجى التواصل معنا للحصول على التفاصيل.",
     
     // WhatsApp
     whatsappMessage: "مرحباً! أنا مهتم بمنتجاتكم النسيجية.",
