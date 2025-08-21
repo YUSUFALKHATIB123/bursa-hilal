@@ -1254,53 +1254,7 @@ function CatalogPage({ isDark, t }) {
         price: "$2.60",
         pricePrinted: "$3.10",
       },
-      {
-        id: 8,
-        name: t ? t('gentleBabyfaceCotton') : "Gentle Babyface Cotton",
-        category: "babyface",
-        description: t ? t('gentleBabyfaceCottonDesc') : "Soft and safe fabrics for children",
-        images: [babyfaceColor1, babyfaceColor2, babyfaceColor3],
-        image: babyfaceColor1,
-        productId: "BF-001",
-        composition: "100% Organic Cotton",
-        width: "120cm",
-        weight: "180 g/m²",
-      },
-      {
-        id: 9,
-        name: t ? t('organicBabyfaceSeries') : "Organic Babyface Series",
-        category: "babyface",
-        description: t ? t('organicBabyfaceSeriesDesc') : "Natural and hypoallergenic materials",
-        image: darkColorTailoring,
-        productId: "BF-002",
-        composition: "100% Organic Cotton",
-        width: "120cm",
-        weight: "190 g/m²",
-      },
-      {
-        id: 10,
-        name: t ? t('luxuryVelvetMakhmal') : "Luxury Velvet Makhmal",
-        category: "velvet",
-        description: t ? t('luxuryVelvetMakhmalDesc') : "Premium velvet fabric for upholstery",
-        images: [velvet1, velvet2],
-        image: velvet1,
-        productId: "VM-001",
-        composition: "100% Polyester",
-        width: "140cm",
-        weight: "320 g/m²",
-      },
-      {
-        id: 11,
-        name: t ? t('softNubuckTexture') : "Soft Nubuck Texture",
-        category: "nubuck",
-        description: t ? t('softNubuckTextureDesc') : "Suede-like texture for premium applications",
-        image: nubuk002,
-        productId: "NB-001",
-        composition: "100% Polyester",
-        width: "140cm",
-        weight: "290 g/m²",
-        isNew: true,
-      },
+
       {
         id: 12,
         name: t ? t('chineseCizgiFabric') : "Chinese Cizgi Fabric",
@@ -1527,29 +1481,6 @@ function CatalogPage({ isDark, t }) {
     ],
     curtains: [
       {
-        id: 13,
-        name: t ? t('premiumVelvetCurtains') : "Premium Velvet Curtains",
-        category: "curtain",
-        description: t ? t('premiumVelvetCurtainsDesc') : "Luxurious velvet curtains for elegant interiors",
-        image: velvet1,
-        productId: "CT-001",
-        composition: "100% Polyester Velvet",
-        width: "140cm",
-        weight: "280 g/m²",
-        isNew: true,
-      },
-      {
-        id: 14,
-        name: t ? t('modernDecorativeCurtains') : "Modern Decorative Curtains",
-        category: "curtain",
-        description: t ? t('modernDecorativeCurtainsDesc') : "Contemporary curtain designs for modern living spaces",
-        image: decoratedInterior,
-        productId: "CT-002",
-        composition: "85% Polyester, 15% Cotton",
-        width: "150cm",
-        weight: "240 g/m²",
-      },
-      {
         id: 15,
         name: t ? t('chineseBlackoutCurtains') : "Chinese Blackout Curtains",
         category: "blackout",
@@ -1719,12 +1650,13 @@ function CatalogPage({ isDark, t }) {
           {filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="relative bg-white dark:bg-[#112B3C] rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] animate-fadeInUp"
+              className="relative bg-white dark:bg-[#112B3C] rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] animate-fadeInUp cursor-pointer"
               style={isDark ? {
                 background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
                 border: "1.5px solid rgba(79,125,102,0.18)",
                 boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
               } : {}}
+              onClick={() => handleViewDetails(product)}
             >
               {/* New Label */}
               {product.isNew && (
@@ -1780,7 +1712,10 @@ function CatalogPage({ isDark, t }) {
                   onMouseLeave={e => {
                     if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #0B1623 0%, #22395c 100%)";
                   }}
-                  onClick={() => handleViewDetails(product)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleViewDetails(product);
+                  }}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   {t ? t('viewDetails') : "View Details"}
@@ -2294,10 +2229,7 @@ const translations = {
     classicJacquardDesign: "Classic Jacquard Design",
     contemporarySohoFabric: "Contemporary Soho Fabric",
     urbanSohoCollection: "Urban Soho Collection",
-    gentleBabyfaceCotton: "Gentle Babyface Cotton",
-    organicBabyfaceSeries: "Organic Babyface Series",
-    luxuryVelvetMakhmal: "Luxury Velvet Makhmal",
-    softNubuckTexture: "Soft Nubuck Texture",
+
     chineseCizgiFabric: "Chinese Cizgi Fabric",
     chineseBuffyFabric: "Chinese Buffy Fabric",
     chineseBuffyFabric2: "Chinese Buffy Fabric",
@@ -2313,8 +2245,7 @@ const translations = {
     chineseBukleFabric4: "Chinese Bukle Fabric",
     traditionalPrayerRug: "Traditional Prayer Rug",
     modernAreaRug: "Modern Area Rug",
-    premiumVelvetCurtains: "Premium Velvet Curtains",
-    modernDecorativeCurtains: "Modern Decorative Curtains",
+
     jacquardCurtains: "Jacquard Curtains",
     blackoutCurtains: "Blackout Curtains",
     
@@ -2328,10 +2259,7 @@ const translations = {
     classicJacquardDesignDesc: "Traditional patterns with modern appeal",
     contemporarySohoFabricDesc: "Modern textile for fashion and decor",
     urbanSohoCollectionDesc: "Versatile fabrics for contemporary designs",
-    gentleBabyfaceCottonDesc: "Soft and safe fabrics for children",
-    organicBabyfaceSeriesDesc: "Natural and hypoallergenic materials",
-    luxuryVelvetMakhmalDesc: "Premium velvet fabric for upholstery",
-    softNubuckTextureDesc: "Suede-like texture for premium applications",
+
     chineseCizgiFabricDesc: "Premium Chinese fabric with elegant patterns and superior quality",
     chineseBuffyFabricDesc: "Premium Chinese Buffy fabric with two weight options for different applications",
     chineseBuffyFabric2Desc: "Premium Chinese Buffy fabric with two weight options for different applications",
@@ -2347,8 +2275,7 @@ const translations = {
     chineseBukleFabric4Desc: "Premium Chinese Bukle fabric with elegant texture and superior quality",
     traditionalPrayerRugDesc: "Handcrafted prayer rugs with traditional patterns",
     modernAreaRugDesc: "Contemporary designs for modern spaces",
-    premiumVelvetCurtainsDesc: "Luxurious velvet curtains for elegant interiors",
-    modernDecorativeCurtainsDesc: "Contemporary curtain designs for modern living spaces",
+
     jacquardCurtainsDesc: "Elegant jacquard curtains with sophisticated patterns",
     blackoutCurtainsDesc: "Premium blackout curtains for complete light control",
     
@@ -2481,10 +2408,7 @@ const translations = {
     classicJacquardDesign: "تصميم جاكار كلاسيكي",
     contemporarySohoFabric: "قماش سوهو معاصر",
     urbanSohoCollection: "مجموعة سوهو الحضرية",
-    gentleBabyfaceCotton: "قطن بيبي فيس الناعم",
-    organicBabyfaceSeries: "سلسلة بيبي فيس العضوية",
-    luxuryVelvetMakhmal: "مخمل فاخر",
-    softNubuckTexture: "نسيج نوباك الناعم",
+
     chineseCizgiFabric: "قماش صيني سيزجي",
     chineseBuffyFabric: "قماش صيني بافي",
     chineseBuffyFabric2: "قماش صيني بافي",
@@ -2500,8 +2424,7 @@ const translations = {
     chineseBukleFabric4: "قماش صيني بوكلي",
     traditionalPrayerRug: "سجادة صلاة تقليدية",
     modernAreaRug: "سجادة منطقة عصرية",
-    premiumVelvetCurtains: "ستائر مخمل فاخرة",
-    modernDecorativeCurtains: "ستائر زخرفية عصرية",
+
     jacquardCurtains: "ستائر جاكار",
     blackoutCurtains: "ستائر بلاك أوت",
     
@@ -2515,10 +2438,7 @@ const translations = {
     classicJacquardDesignDesc: "أنماط تقليدية مع جاذبية عصرية",
     contemporarySohoFabricDesc: "نسيج عصري للأزياء والديكور",
     urbanSohoCollectionDesc: "أقمشة متعددة الاستخدامات للتصاميم المعاصرة",
-    gentleBabyfaceCottonDesc: "أقمشة ناعمة وآمنة للأطفال",
-    organicBabyfaceSeriesDesc: "مواد طبيعية وغير مسببة للحساسية",
-    luxuryVelvetMakhmalDesc: "قماش مخمل فاخر للتنجيد",
-    softNubuckTextureDesc: "نسيج يشبه الجلد المدبوغ للتطبيقات الفاخرة",
+
     chineseCizgiFabricDesc: "قماش صيني مميز مع أنماط أنيقة وجودة عالية",
     chineseBuffyFabricDesc: "قماش صيني بافي مميز مع خيارين للوزن لتطبيقات مختلفة",
     chineseBuffyFabric2Desc: "قماش صيني بافي مميز مع خيارين للوزن لتطبيقات مختلفة",
@@ -2534,8 +2454,7 @@ const translations = {
     chineseBukleFabric4Desc: "قماش صيني بوكلي مميز مع نسيج أنيق وجودة عالية",
     traditionalPrayerRugDesc: "سجاد صلاة يدوي الصنع مع أنماط تقليدية",
     modernAreaRugDesc: "تصاميم معاصرة للمساحات الحديثة",
-    premiumVelvetCurtainsDesc: "ستائر مخمل فاخرة للديكورات الأنيقة",
-    modernDecorativeCurtainsDesc: "تصاميم ستائر معاصرة لمساحات المعيشة الحديثة",
+
     jacquardCurtainsDesc: "ستائر جاكار أنيقة مع أنماط متطورة",
     blackoutCurtainsDesc: "ستائر بلاك أوت مميزة للتحكم الكامل في الضوء",
     
