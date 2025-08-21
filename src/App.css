@@ -291,10 +291,27 @@ html {
   color: #000 !important;
   width: 40px !important;
   height: 40px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 50% !important;
+  backdrop-filter: blur(4px) !important;
 }
 .custom-swiper .swiper-button-next:after,
 .custom-swiper .swiper-button-prev:after {
-  font-size: 22px !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  content: "" !important;
+}
+.custom-swiper .swiper-button-next:before {
+  content: "→" !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
+  color: #000 !important;
+}
+.custom-swiper .swiper-button-prev:before {
+  content: "←" !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
+  color: #000 !important;
 }
 .custom-swiper .swiper-pagination-bullet {
   background: #222 !important;
