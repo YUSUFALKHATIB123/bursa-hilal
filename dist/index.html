@@ -36,29 +36,67 @@
     <!-- Manifest -->
     <link rel="manifest" href="/manifest.json" />
     
-    <!-- Preload Critical Resources -->
-    <link rel="preload" href="data:text/jsx;base64,aW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0JwppbXBvcnQgUmVhY3RET00gZnJvbSAncmVhY3QtZG9tL2NsaWVudCcKaW1wb3J0IEFwcCBmcm9tICcuL0FwcC5qc3gnCmltcG9ydCAnLi9pbmRleC5jc3MnCmltcG9ydCAnLi9zdHlsZXMvcGVyZm9ybWFuY2UuY3NzJwoKLy8gUmVnaXN0ZXIgc2VydmljZSB3b3JrZXIgZm9yIGNhY2hpbmcKaWYgKCdzZXJ2aWNlV29ya2VyJyBpbiBuYXZpZ2F0b3IpIHsKICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcignbG9hZCcsICgpID0+IHsKICAgIG5hdmlnYXRvci5zZXJ2aWNlV29ya2VyLnJlZ2lzdGVyKCcvc3cuanMnKQogICAgICAudGhlbigocmVnaXN0cmF0aW9uKSA9PiB7CiAgICAgICAgY29uc29sZS5sb2coJ1NXIHJlZ2lzdGVyZWQ6ICcsIHJlZ2lzdHJhdGlvbik7CiAgICAgIH0pCiAgICAgIC5jYXRjaCgocmVnaXN0cmF0aW9uRXJyb3IpID0+IHsKICAgICAgICBjb25zb2xlLmxvZygnU1cgcmVnaXN0cmF0aW9uIGZhaWxlZDogJywgcmVnaXN0cmF0aW9uRXJyb3IpOwogICAgICB9KTsKICB9KTsKfQoKLy8gUHJlbG9hZCBjcml0aWNhbCByZXNvdXJjZXMKY29uc3QgcHJlbG9hZENyaXRpY2FsUmVzb3VyY2VzID0gKCkgPT4gewogIGNvbnN0IGNyaXRpY2FsUmVzb3VyY2VzID0gWwogICAgJy9zcmMvYXNzZXRzL2xvZ28uYXZpZicsCiAgICAnL3NyYy9hc3NldHMvY29tcGFueS1idWlsZGluZy53ZWJwJwogIF07CgogIGNyaXRpY2FsUmVzb3VyY2VzLmZvckVhY2gocmVzb3VyY2UgPT4gewogICAgY29uc3QgbGluayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2xpbmsnKTsKICAgIGxpbmsucmVsID0gJ3ByZWxvYWQnOwogICAgbGluay5ocmVmID0gcmVzb3VyY2U7CiAgICBsaW5rLmFzID0gcmVzb3VyY2UuZW5kc1dpdGgoJy53ZWJwJykgfHwgcmVzb3VyY2UuZW5kc1dpdGgoJy5hdmlmJykgPyAnaW1hZ2UnIDogJ2ZldGNoJzsKICAgIGRvY3VtZW50LmhlYWQuYXBwZW5kQ2hpbGQobGluayk7CiAgfSk7Cn07CgovLyBJbml0aWFsaXplIHBlcmZvcm1hbmNlIG9wdGltaXphdGlvbnMKcHJlbG9hZENyaXRpY2FsUmVzb3VyY2VzKCk7CgpSZWFjdERPTS5jcmVhdGVSb290KGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdyb290JykpLnJlbmRlcigKICA8UmVhY3QuU3RyaWN0TW9kZT4KICAgIDxBcHAgLz4KICA8L1JlYWN0LlN0cmljdE1vZGU+LAopCg==" as="script" />
-    <link rel="preload" href="/assets/logo.avif" as="image" />
-    
-    <!-- DNS Prefetch -->
+    <!-- Resource Hints for Performance -->
     <link rel="dns-prefetch" href="//api.emailjs.com" />
     <link rel="dns-prefetch" href="//www.youtube.com" />
     <link rel="dns-prefetch" href="//www.google.com" />
+    <link rel="preconnect" href="//api.emailjs.com" />
+    <link rel="preconnect" href="//www.youtube.com" />
+    <link rel="preconnect" href="//fonts.googleapis.com" />
+    <link rel="preconnect" href="//fonts.gstatic.com" crossorigin />
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="data:text/jsx;base64,aW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0JwppbXBvcnQgUmVhY3RET00gZnJvbSAncmVhY3QtZG9tL2NsaWVudCcKaW1wb3J0IEFwcCBmcm9tICcuL0FwcC5qc3gnCmltcG9ydCAnLi9pbmRleC5jc3MnCmltcG9ydCAnLi9zdHlsZXMvcGVyZm9ybWFuY2UuY3NzJwoKLy8gUGVyZm9ybWFuY2Ugb3B0aW1pemF0aW9uIGltcG9ydHMKaW1wb3J0IHsgdXNlUGVyZm9ybWFuY2VPcHRpbWl6YXRpb24gfSBmcm9tICcuL2hvb2tzL3VzZVBlcmZvcm1hbmNlT3B0aW1pemF0aW9uLmpzJwoKLy8gUmVnaXN0ZXIgc2VydmljZSB3b3JrZXIgZm9yIGNhY2hpbmcKaWYgKCdzZXJ2aWNlV29ya2VyJyBpbiBuYXZpZ2F0b3IpIHsKICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcignbG9hZCcsICgpID0+IHsKICAgIG5hdmlnYXRvci5zZXJ2aWNlV29ya2VyLnJlZ2lzdGVyKCcvc3cuanMnKQogICAgICAudGhlbigocmVnaXN0cmF0aW9uKSA9PiB7CiAgICAgICAgY29uc29sZS5sb2coJ1NXIHJlZ2lzdGVyZWQ6ICcsIHJlZ2lzdHJhdGlvbik7CiAgICAgIH0pCiAgICAgIC5jYXRjaCgocmVnaXN0cmF0aW9uRXJyb3IpID0+IHsKICAgICAgICBjb25zb2xlLmxvZygnU1cgcmVnaXN0cmF0aW9uIGZhaWxlZDogJywgcmVnaXN0cmF0aW9uRXJyb3IpOwogICAgICB9KTsKICB9KTsKfQoKLy8gUHJlbG9hZCBjcml0aWNhbCByZXNvdXJjZXMKY29uc3QgcHJlbG9hZENyaXRpY2FsUmVzb3VyY2VzID0gKCkgPT4gewogIGNvbnN0IGNyaXRpY2FsUmVzb3VyY2VzID0gWwogICAgJy9zcmMvYXNzZXRzL2xvZ28uYXZpZicsCiAgICAnL3NyYy9hc3NldHMvY29tcGFueS1idWlsZGluZy53ZWJwJwogIF07CgogIGNyaXRpY2FsUmVzb3VyY2VzLmZvckVhY2gocmVzb3VyY2UgPT4gewogICAgY29uc3QgbGluayA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2xpbmsnKTsKICAgIGxpbmsucmVsID0gJ3ByZWxvYWQnOwogICAgbGluay5ocmVmID0gcmVzb3VyY2U7CiAgICBsaW5rLmFzID0gcmVzb3VyY2UuZW5kc1dpdGgoJy53ZWJwJykgfHwgcmVzb3VyY2UuZW5kc1dpdGgoJy5hdmlmJykgPyAnaW1hZ2UnIDogJ2ZldGNoJzsKICAgIGRvY3VtZW50LmhlYWQuYXBwZW5kQ2hpbGQobGluayk7CiAgfSk7Cn07CgovLyBQZXJmb3JtYW5jZSBtb25pdG9yaW5nCmNvbnN0IGluaXRQZXJmb3JtYW5jZU1vbml0b3JpbmcgPSAoKSA9PiB7CiAgaWYgKCdwZXJmb3JtYW5jZScgaW4gd2luZG93KSB7CiAgICAvLyBNb25pdG9yIENvcmUgV2ViIFZpdGFscwogICAgaWYgKCdQZXJmb3JtYW5jZU9ic2VydmVyJyBpbiB3aW5kb3cpIHsKICAgICAgdHJ5IHsKICAgICAgICBjb25zdCBvYnNlcnZlciA9IG5ldyBQZXJmb3JtYW5jZU9ic2VydmVyKChsaXN0KSA9PiB7CiAgICAgICAgICBmb3IgKGNvbnN0IGVudHJ5IG9mIGxpc3QuZ2V0RW50cmllcygpKSB7CiAgICAgICAgICAgIGlmIChlbnRyeS5lbnRyeVR5cGUgPT09ICdsYXJnZXN0LWNvbnRlbnRmdWwtcGFpbnQnKSB7CiAgICAgICAgICAgICAgY29uc29sZS5sb2coJ0xDUDonLCBlbnRyeS5zdGFydFRpbWUsICdtcycpOwogICAgICAgICAgICB9CiAgICAgICAgICAgIGlmIChlbnRyeS5lbnRyeVR5cGUgPT09ICdmaXJzdC1pbnB1dCcpIHsKICAgICAgICAgICAgICBjb25zb2xlLmxvZygnRklEOicsIGVudHJ5LnByb2Nlc3NpbmdTdGFydCAtIGVudHJ5LnN0YXJ0VGltZSwgJ21zJyk7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgaWYgKGVudHJ5LmVudHJ5VHlwZSA9PT0gJ2xheW91dC1zaGlmdCcpIHsKICAgICAgICAgICAgICBjb25zb2xlLmxvZygnQ0xTOicsIGVudHJ5LnZhbHVlKTsKICAgICAgICAgICAgfQogICAgICAgICAgfQogICAgICAgIH0pOwogICAgICAgIAogICAgICAgIG9ic2VydmVyLm9ic2VydmUoeyBlbnRyeVR5cGVzOiBbJ2xhcmdlc3QtY29udGVudGZ1bC1wYWludCcsICdmaXJzdC1pbnB1dCcsICdsYXlvdXQtc2hpZnQnXSB9KTsKICAgICAgfSBjYXRjaCAoZSkgewogICAgICAgIGNvbnNvbGUud2FybignUGVyZm9ybWFuY2UgbW9uaXRvcmluZyBub3Qgc3VwcG9ydGVkJyk7CiAgICAgIH0KICAgIH0KICB9Cn07CgovLyBJbml0aWFsaXplIHBlcmZvcm1hbmNlIG9wdGltaXphdGlvbnMKcHJlbG9hZENyaXRpY2FsUmVzb3VyY2VzKCk7CmluaXRQZXJmb3JtYW5jZU1vbml0b3JpbmcoKTsKCi8vIFJlbW92ZSBsb2FkaW5nIHNjcmVlbgpjb25zdCByZW1vdmVMb2FkaW5nU2NyZWVuID0gKCkgPT4gewogIGNvbnN0IGxvYWRpbmcgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbG9hZGluZycpOwogIGlmIChsb2FkaW5nKSB7CiAgICBsb2FkaW5nLnN0eWxlLm9wYWNpdHkgPSAnMCc7CiAgICBzZXRUaW1lb3V0KCgpID0+IHsKICAgICAgbG9hZGluZy5zdHlsZS5kaXNwbGF5ID0gJ25vbmUnOwogICAgfSwgMzAwKTsKICB9Cn07CgovLyBBcHAgd3JhcHBlciB3aXRoIHBlcmZvcm1hbmNlIG9wdGltaXphdGlvbnMKY29uc3QgQXBwV2l0aFBlcmZvcm1hbmNlID0gKCkgPT4gewogIHVzZVBlcmZvcm1hbmNlT3B0aW1pemF0aW9uKCk7CiAgCiAgUmVhY3QudXNlRWZmZWN0KCgpID0+IHsKICAgIHJlbW92ZUxvYWRpbmdTY3JlZW4oKTsKICB9LCBbXSk7CgogIHJldHVybiA8QXBwIC8+Owp9OwoKUmVhY3RET00uY3JlYXRlUm9vdChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncm9vdCcpKS5yZW5kZXIoCiAgPFJlYWN0LlN0cmljdE1vZGU+CiAgICA8QXBwV2l0aFBlcmZvcm1hbmNlIC8+CiAgPC9SZWFjdC5TdHJpY3RNb2RlPiwKKQo=" as="script" type="module" />
+    <link rel="preload" href="/assets/logo.avif" as="image" type="image/avif" />
+    
+    <!-- Preload Critical Fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" /></noscript>
     
     <!-- Performance Meta Tags -->
     <meta name="format-detection" content="telephone=no" />
     <meta name="msapplication-TileColor" content="#4F7D66" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
-    <script type="module" crossorigin src="/assets/js/index-BLmBq4Iv.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/js/vendor-Ck8k_xBp.js">
-    <link rel="modulepreload" crossorigin href="/assets/js/router-W49CFJQk.js">
-    <link rel="modulepreload" crossorigin href="/assets/js/emailjs-bGLtNJYP.js">
-    <link rel="modulepreload" crossorigin href="/assets/js/swiper-DOrCKJkZ.js">
-    <link rel="modulepreload" crossorigin href="/assets/js/ui-MWmaj-W4.js">
-    <link rel="stylesheet" crossorigin href="/assets/css/index-DNfbja5j.css">
+    
+    <!-- Performance Optimizations -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <!-- Critical CSS Inline -->
+    <style>
+      /* Critical CSS for above-the-fold content */
+      body { margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+      #root { min-height: 100vh; }
+      .loading { display: flex; justify-content: center; align-items: center; height: 100vh; }
+      .loading-spinner { width: 40px; height: 40px; border: 4px solid #f3f4f6; border-top: 4px solid #4F7D66; border-radius: 50%; animation: spin 1s linear infinite; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+    <script type="module" crossorigin src="/assets/js/index-NJKt3IPh.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/js/vendor-DdrrH1LE.js">
+    <link rel="modulepreload" crossorigin href="/assets/js/router-ymFYJG0o.js">
+    <link rel="modulepreload" crossorigin href="/assets/js/emailjs-C__1yBSQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/js/swiper-CG6wdigN.js">
+    <link rel="modulepreload" crossorigin href="/assets/js/ui-CGIHKOa-.js">
+    <link rel="stylesheet" crossorigin href="/assets/css/index-Dy4t8tCH.css">
   </head>
   <body>
+    <!-- Loading Screen -->
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+    </div>
+    
     <div id="root"></div>
+    
+    <!-- Remove loading screen when app loads -->
+    <script>
+      window.addEventListener('load', () => {
+        const loading = document.getElementById('loading');
+        if (loading) {
+          loading.style.display = 'none';
+        }
+      });
+    </script>
+    
     
     <!-- Service Worker Registration -->
     <script>
@@ -73,6 +111,18 @@
             });
         });
       }
+    </script>
+    
+    <!-- Performance Monitoring -->
+    <script>
+      // Performance monitoring
+      window.addEventListener('load', () => {
+        if ('performance' in window) {
+          const perfData = performance.getEntriesByType('navigation')[0];
+          console.log('Page Load Time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+          console.log('DOM Content Loaded:', perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart, 'ms');
+        }
+      });
     </script>
   </body>
 </html>

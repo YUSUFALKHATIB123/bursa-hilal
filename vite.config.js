@@ -72,8 +72,6 @@ export default defineConfig({
           ui: ['lucide-react', 'react-icons'],
           swiper: ['swiper'],
           emailjs: ['@emailjs/browser'],
-          icons: ['lucide-react'],
-          utils: ['react', 'react-dom'],
         },
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
