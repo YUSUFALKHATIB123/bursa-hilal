@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import {
   Menu,
@@ -28,15 +28,16 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button.jsx";
 import WhatsappChatButton from "./components/WhatsappChatButton";
+import PerformanceMonitor from "./components/PerformanceMonitor";
+import OptimizedImage from "./components/OptimizedImage";
+import OptimizedYouTube from "./components/OptimizedYouTube";
+import ImageGallery from "./components/ImageGallery";
+
 import emailjs from '@emailjs/browser';
 import logoImage from "./assets/logo.avif";
-// import fabricSampleImage from "./assets/fabric-sample.jpeg";
 import companyBuildingImage from "./assets/company-building.webp";
-import babyfaceColor1 from "./assets/babyface-color1.jpeg";
-import babyfaceColor2 from "./assets/babyface-color2.jpeg";
-import babyfaceColor3 from "./assets/babyface-color3.jpeg";
+import bursaHilalCompanyImage from "./assets/bursa hilal campony.jpg";
 import couchIcon from "./assets/couch.png";
-// import cushionIcon from "./assets/cushion.png";
 import carpetIcon from "./assets/prayer.png";
 import curtainIcon from "./assets/curtain.png";
 // New fabric images
@@ -205,17 +206,14 @@ function ImageZoomModal({ image, isOpen, onClose, alt }) {
       onClick={onClose}
     >
       <div className="relative max-w-lg max-h-[50vh] w-full flex items-center justify-center">
-        <button
-          onClick={onClose}
-          className="absolute -top-42 -right-2 z-10 p-2 bg-black bg-opacity-70 hover:bg-opacity-90 rounded-full transition-all duration-200"
-        >
-          <X className="h-5 w-5 text-white" />
-        </button>
-        <img
+        <OptimizedImage
           src={image}
           alt={alt}
           className="w-full h-full object-contain rounded-lg shadow-2xl"
           style={{ maxWidth: '100%', maxHeight: '100%' }}
+          width={600}
+          height={400}
+          priority={true}
           onClick={(e) => e.stopPropagation()}
         />
       </div>
@@ -310,11 +308,14 @@ function ProductDetailsModal({ product, isOpen, onClose, t }) {
             >
               {images.map((img, idx) => (
                 <SwiperSlide key={idx}>
-                  <img
+                  <OptimizedImage
                     src={img}
                     alt={product.name}
                     className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                     style={{ borderRadius: '0.75rem', height: '100%' }}
+                    width={400}
+                    height={400}
+                    priority={idx === 0}
                     onClick={() => handleImageClick(img)}
                     title={t ? t('clickToZoom') : "Click to zoom"}
                   />
@@ -459,17 +460,21 @@ function Navigation({ language, toggleLanguage, t, isDark, toggleDarkMode }) {
             onClick={() => (window.location.href = "/")}
           >
             <div className="flex-shrink-0">
-              <img
+              <OptimizedImage
                 src={logoImage}
                 alt="BURSA HILAL ÖRME TEKSTİL Logo"
-                className="w-10 h-10 object-contain rounded-lg"
+                className="w-16 h-14 object-contain rounded-lg logo-image"
+                width={64}
+                height={56}
+                priority={true}
+                style={{ backgroundColor: 'transparent' }}
               />
             </div>
-            <div className="ml-3">
-              <div className="text-lg font-semibold text-[#E5E7EB]">
+            <div className="ml-4 flex flex-col justify-center">
+              <div className="text-xl font-semibold text-[#E5E7EB] leading-tight">
                 BURSA HILAL
               </div>
-              <div className="text-xs text-[#E5E7EB] opacity-80">
+              <div className="text-sm text-[#E5E7EB] opacity-80 leading-tight">
                 ÖRME TEKSTİL LTD.ŞTİ
               </div>
             </div>
@@ -822,110 +827,485 @@ function HomePage({ isDark, t }) {
 
             {/* Video Section */}
             <div className="relative animate-fadeInRight">
-              <div className="aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
-                <iframe
-                  src="https://www.youtube.com/embed/4XHRYX0PpQA"
-                  title="Company Video"
-                  className="w-full h-full"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              </div>
+              <OptimizedYouTube
+                videoId="4XHRYX0PpQA"
+                title="Company Video"
+                className="w-full h-full"
+                width={560}
+                height={315}
+              />
             </div>
           </div>
         </div>
       </section>
 
-      
-      {/* Statistics Section */}
-      <section className="py-16 transition-all duration-400"
+      {/* About Us Section */}
+      <section className="py-20 transition-all duration-400 relative overflow-hidden"
         style={{
           background: isDark
-            ? "linear-gradient(90deg, #0B1623 0%, #22395c 100%)"
-            : "#f9fafb"
+            ? "linear-gradient(135deg, #0B1623 0%, #22395c 100%)"
+            : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)"
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            <div
-              id="counter-20"
-              className="p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
-              style={isDark ? {
-                background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
-                border: "1.5px solid rgba(79,125,102,0.18)",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
-              } : {
-                background: "#fff",
-                border: "1.5px solid #e5e7eb",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.08)"
-              }}
+        {/* 3D Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full opacity-10 animate-pulse"
+            style={{
+              background: isDark 
+                ? "linear-gradient(45deg, #3B82F6 0%, #1E40AF 100%)"
+                : "linear-gradient(45deg, #4F7D66 0%, #0b3d2e 100%)"
+            }}
+          ></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full opacity-5 animate-pulse"
+            style={{
+              background: isDark 
+                ? "linear-gradient(45deg, #1E40AF 0%, #3B82F6 100%)"
+                : "linear-gradient(45deg, #0b3d2e 0%, #4F7D66 100%)"
+            }}
+          ></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-5xl font-bold mb-6"
+              style={isDark ? { color: '#fff' } : { color: '#0b3d2e' }}
             >
-              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-white mb-2">
-                {count20}+
-              </div>
-              <div className="text-lg text-gray-600 dark:text-[#E5E7EB]">
-                {t('yearsExperience')}
+              {t('aboutUsTitle')}
+            </h2>
+            <div className="flex justify-center mb-6">
+              <div
+                className="h-1 w-24 rounded-full"
+                style={{
+                  background: isDark 
+                    ? "linear-gradient(90deg, #3B82F6 0%, #1E40AF 100%)"
+                    : "linear-gradient(90deg, #0b3d2e 0%, #4F7D66 100%)"
+                }}
+              ></div>
+            </div>
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed"
+              style={isDark ? { color: '#E5E7EB' } : { color: '#374151' }}
+            >
+              {t('aboutUsSubtitle')}
+            </p>
+            
+            {/* Mobile Only Image */}
+            <div className="lg:hidden mt-8">
+              <div className="relative max-w-md mx-auto">
+                <div className="relative overflow-hidden rounded-2xl shadow-2xl"
+                  style={{
+                    background: isDark 
+                      ? "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)"
+                      : "linear-gradient(135deg, rgba(79, 125, 102, 0.1) 0%, rgba(11, 61, 46, 0.1) 100%)",
+                    border: isDark 
+                      ? "2px solid rgba(59, 130, 246, 0.2)"
+                      : "2px solid rgba(79, 125, 102, 0.2)"
+                  }}
+                >
+                  <OptimizedImage
+                    src={bursaHilalCompanyImage}
+                    alt="BURSA HILAL ÖRME TEKSTİL Company Building"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                    width={400}
+                    height={300}
+                    style={{ aspectRatio: '4/3' }}
+                  />
+                  
+                  {/* Overlay with company info */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute bottom-6 left-6 right-6 text-white">
+                      <h4 className="text-xl font-bold mb-2">BURSA HILAL ÖRME TEKSTİL</h4>
+                      <p className="text-sm opacity-90">Fabrics with Global Standards</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating Elements for Mobile */}
+                <div className="absolute -top-4 -right-4 w-12 h-12 rounded-full opacity-80 floating-element"
+                  style={{
+                    background: isDark 
+                      ? "linear-gradient(45deg, #3B82F6 0%, #1E40AF 100%)"
+                      : "linear-gradient(45deg, #4F7D66 0%, #0b3d2e 100%)",
+                    boxShadow: isDark 
+                      ? "0 6px 24px rgba(59, 130, 246, 0.4)"
+                      : "0 6px 24px rgba(79, 125, 102, 0.4)"
+                  }}
+                >
+                  <div className="flex items-center justify-center h-full">
+                    <span className="text-white font-bold text-sm">20+</span>
+                  </div>
+                </div>
+
+                <div className="absolute -bottom-4 -left-4 w-10 h-10 rounded-full opacity-80 floating-element"
+                  style={{
+                    background: isDark 
+                      ? "linear-gradient(45deg, #1E40AF 0%, #3B82F6 100%)"
+                      : "linear-gradient(45deg, #0b3d2e 0%, #4F7D66 100%)",
+                    boxShadow: isDark 
+                      ? "0 4px 20px rgba(59, 130, 246, 0.3)"
+                      : "0 4px 20px rgba(79, 125, 102, 0.3)"
+                  }}
+                >
+                  <div className="flex items-center justify-center h-full">
+                    <span className="text-white font-bold text-xs">10+</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div
-              id="counter-10"
-              className="p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
-              style={isDark ? {
-                background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
-                border: "1.5px solid rgba(79,125,102,0.18)",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
-              } : {
-                background: "#fff",
-                border: "1.5px solid #e5e7eb",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.08)"
-              }}
-            >
-              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-white mb-2">
-                {count10}+
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Text Content */}
+            <div className="space-y-8 animate-fadeInLeft">
+              <div className="space-y-6">
+                <h3 className="text-2xl lg:text-3xl font-bold"
+                  style={isDark ? { color: '#fff' } : { color: '#0b3d2e' }}
+                >
+                  {t('aboutUsHeading')}
+                </h3>
+                <p className="text-lg leading-relaxed"
+                  style={isDark ? { color: '#E5E7EB' } : { color: '#4B5563' }}
+                >
+                  {t('aboutUsText1')}
+                </p>
+                <p className="text-lg leading-relaxed"
+                  style={isDark ? { color: '#E5E7EB' } : { color: '#4B5563' }}
+                >
+                  {t('aboutUsText2')}
+                </p>
               </div>
-              <div className="text-lg text-gray-600 dark:text-[#E5E7EB]">
-                {t('countriesServed')}
+
+              {/* Statistics Cards */}
+              <div className="grid grid-cols-2 gap-4">
+                <div
+                  id="counter-20"
+                  className="p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp text-center"
+                  style={isDark ? {
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)",
+                    border: "1px solid rgba(59, 130, 246, 0.2)",
+                    boxShadow: "0 8px 32px rgba(59, 130, 246, 0.1)"
+                  } : {
+                    background: "linear-gradient(135deg, rgba(79, 125, 102, 0.1) 0%, rgba(11, 61, 46, 0.1) 100%)",
+                    border: "1px solid rgba(79, 125, 102, 0.2)",
+                    boxShadow: "0 8px 32px rgba(79, 125, 102, 0.1)"
+                  }}
+                >
+                  <div className="text-2xl font-bold mb-1"
+                    style={isDark ? { color: '#3B82F6' } : { color: '#0b3d2e' }}
+                  >
+                    {count20}+
+                  </div>
+                  <div className="text-sm"
+                    style={isDark ? { color: '#E5E7EB' } : { color: '#6B7280' }}
+                  >
+                    {t('yearsExperience')}
+                  </div>
+                </div>
+                <div
+                  id="counter-10"
+                  className="p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp text-center"
+                  style={isDark ? {
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)",
+                    border: "1px solid rgba(59, 130, 246, 0.2)",
+                    boxShadow: "0 8px 32px rgba(59, 130, 246, 0.1)"
+                  } : {
+                    background: "linear-gradient(135deg, rgba(79, 125, 102, 0.1) 0%, rgba(11, 61, 46, 0.1) 100%)",
+                    border: "1px solid rgba(79, 125, 102, 0.2)",
+                    boxShadow: "0 8px 32px rgba(79, 125, 102, 0.1)"
+                  }}
+                >
+                  <div className="text-2xl font-bold mb-1"
+                    style={isDark ? { color: '#3B82F6' } : { color: '#0b3d2e' }}
+                  >
+                    {count10}+
+                  </div>
+                  <div className="text-sm"
+                    style={isDark ? { color: '#E5E7EB' } : { color: '#6B7280' }}
+                  >
+                    {t('countriesServed')}
+                  </div>
+                </div>
+                <div
+                  id="counter-50"
+                  className="p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp text-center"
+                  style={isDark ? {
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)",
+                    border: "1px solid rgba(59, 130, 246, 0.2)",
+                    boxShadow: "0 8px 32px rgba(59, 130, 246, 0.1)"
+                  } : {
+                    background: "linear-gradient(135deg, rgba(79, 125, 102, 0.1) 0%, rgba(11, 61, 46, 0.1) 100%)",
+                    border: "1px solid rgba(79, 125, 102, 0.2)",
+                    boxShadow: "0 8px 32px rgba(79, 125, 102, 0.1)"
+                  }}
+                >
+                  <div className="text-2xl font-bold mb-1"
+                    style={isDark ? { color: '#3B82F6' } : { color: '#0b3d2e' }}
+                  >
+                    {count50}+
+                  </div>
+                  <div className="text-sm"
+                    style={isDark ? { color: '#E5E7EB' } : { color: '#6B7280' }}
+                  >
+                    {t('productsAvailable')}
+                  </div>
+                </div>
+                <div
+                  id="counter-90"
+                  className="p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp text-center"
+                  style={isDark ? {
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)",
+                    border: "1px solid rgba(59, 130, 246, 0.2)",
+                    boxShadow: "0 8px 32px rgba(59, 130, 246, 0.1)"
+                  } : {
+                    background: "linear-gradient(135deg, rgba(79, 125, 102, 0.1) 0%, rgba(11, 61, 46, 0.1) 100%)",
+                    border: "1px solid rgba(79, 125, 102, 0.2)",
+                    boxShadow: "0 8px 32px rgba(79, 125, 102, 0.1)"
+                  }}
+                >
+                  <div className="text-2xl font-bold mb-1"
+                    style={isDark ? { color: '#3B82F6' } : { color: '#0b3d2e' }}
+                  >
+                    {count90}%
+                  </div>
+                  <div className="text-sm"
+                    style={isDark ? { color: '#E5E7EB' } : { color: '#6B7280' }}
+                  >
+                    {t('customerSatisfaction')}
+                  </div>
+                </div>
+              </div>
+
+              {/* Key Features */}
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                 <div className="p-6 rounded-xl about-us-card"
+                  style={isDark ? {
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)",
+                    border: "1px solid rgba(59, 130, 246, 0.2)",
+                    boxShadow: "0 8px 32px rgba(59, 130, 246, 0.1)"
+                  } : {
+                    background: "linear-gradient(135deg, rgba(79, 125, 102, 0.1) 0%, rgba(11, 61, 46, 0.1) 100%)",
+                    border: "1px solid rgba(79, 125, 102, 0.2)",
+                    boxShadow: "0 8px 32px rgba(79, 125, 102, 0.1)"
+                  }}
+                >
+                  <div className="flex items-center mb-3">
+                    <div className="w-3 h-3 rounded-full mr-3"
+                      style={{
+                        background: isDark 
+                          ? "linear-gradient(45deg, #3B82F6 0%, #1E40AF 100%)"
+                          : "linear-gradient(45deg, #4F7D66 0%, #0b3d2e 100%)"
+                      }}
+                    ></div>
+                    <h4 className="font-semibold"
+                      style={isDark ? { color: '#fff' } : { color: '#0b3d2e' }}
+                    >
+                      {t('aboutUsFeature1')}
+                    </h4>
+                  </div>
+                  <p className="text-sm"
+                    style={isDark ? { color: '#E5E7EB' } : { color: '#6B7280' }}
+                  >
+                    {t('aboutUsFeature1Desc')}
+                  </p>
+                </div>
+
+                <div className="p-6 rounded-xl about-us-card"
+                  style={isDark ? {
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)",
+                    border: "1px solid rgba(59, 130, 246, 0.2)",
+                    boxShadow: "0 8px 32px rgba(59, 130, 246, 0.1)"
+                  } : {
+                    background: "linear-gradient(135deg, rgba(79, 125, 102, 0.1) 0%, rgba(11, 61, 46, 0.1) 100%)",
+                    border: "1px solid rgba(79, 125, 102, 0.2)",
+                    boxShadow: "0 8px 32px rgba(79, 125, 102, 0.1)"
+                  }}
+                >
+                  <div className="flex items-center mb-3">
+                    <div className="w-3 h-3 rounded-full mr-3"
+                      style={{
+                        background: isDark 
+                          ? "linear-gradient(45deg, #3B82F6 0%, #1E40AF 100%)"
+                          : "linear-gradient(45deg, #4F7D66 0%, #0b3d2e 100%)"
+                      }}
+                    ></div>
+                    <h4 className="font-semibold"
+                      style={isDark ? { color: '#fff' } : { color: '#0b3d2e' }}
+                    >
+                      {t('aboutUsFeature2')}
+                    </h4>
+                  </div>
+                  <p className="text-sm"
+                    style={isDark ? { color: '#E5E7EB' } : { color: '#6B7280' }}
+                  >
+                    {t('aboutUsFeature2Desc')}
+                  </p>
+                </div>
+
+                <div className="p-6 rounded-xl about-us-card"
+                  style={isDark ? {
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)",
+                    border: "1px solid rgba(59, 130, 246, 0.2)",
+                    boxShadow: "0 8px 32px rgba(59, 130, 246, 0.1)"
+                  } : {
+                    background: "linear-gradient(135deg, rgba(79, 125, 102, 0.1) 0%, rgba(11, 61, 46, 0.1) 100%)",
+                    border: "1px solid rgba(79, 125, 102, 0.2)",
+                    boxShadow: "0 8px 32px rgba(79, 125, 102, 0.1)"
+                  }}
+                >
+                  <div className="flex items-center mb-3">
+                    <div className="w-3 h-3 rounded-full mr-3"
+                      style={{
+                        background: isDark 
+                          ? "linear-gradient(45deg, #3B82F6 0%, #1E40AF 100%)"
+                          : "linear-gradient(45deg, #4F7D66 0%, #0b3d2e 100%)"
+                      }}
+                    ></div>
+                    <h4 className="font-semibold"
+                      style={isDark ? { color: '#fff' } : { color: '#0b3d2e' }}
+                    >
+                      {t('aboutUsFeature3')}
+                    </h4>
+                  </div>
+                  <p className="text-sm"
+                    style={isDark ? { color: '#E5E7EB' } : { color: '#6B7280' }}
+                  >
+                    {t('aboutUsFeature3Desc')}
+                  </p>
+                </div>
+
+                <div className="p-6 rounded-xl about-us-card"
+                  style={isDark ? {
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)",
+                    border: "1px solid rgba(59, 130, 246, 0.2)",
+                    boxShadow: "0 8px 32px rgba(59, 130, 246, 0.1)"
+                  } : {
+                    background: "linear-gradient(135deg, rgba(79, 125, 102, 0.1) 0%, rgba(11, 61, 46, 0.1) 100%)",
+                    border: "1px solid rgba(79, 125, 102, 0.2)",
+                    boxShadow: "0 8px 32px rgba(79, 125, 102, 0.1)"
+                  }}
+                >
+                  <div className="flex items-center mb-3">
+                    <div className="w-3 h-3 rounded-full mr-3"
+                      style={{
+                        background: isDark 
+                          ? "linear-gradient(45deg, #3B82F6 0%, #1E40AF 100%)"
+                          : "linear-gradient(45deg, #4F7D66 0%, #0b3d2e 100%)"
+                      }}
+                    ></div>
+                    <h4 className="font-semibold"
+                      style={isDark ? { color: '#fff' } : { color: '#0b3d2e' }}
+                    >
+                      {t('aboutUsFeature4')}
+                    </h4>
+                  </div>
+                  <p className="text-sm"
+                    style={isDark ? { color: '#E5E7EB' } : { color: '#6B7280' }}
+                  >
+                    {t('aboutUsFeature4Desc')}
+                  </p>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <div className="pt-4">
+                <Button
+                  size="lg"
+                  className="transition-all duration-300 hover:scale-105 shadow-lg"
+                  style={isDark ? {
+                    background: "linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)",
+                    color: "#fff",
+                    fontWeight: "bold",
+                    boxShadow: "0 4px 20px rgba(59, 130, 246, 0.3)"
+                  } : {
+                    background: "linear-gradient(135deg, #0b3d2e 0%, #4F7D66 100%)",
+                    color: "#fff",
+                    fontWeight: "bold",
+                    boxShadow: "0 4px 20px rgba(79, 125, 102, 0.3)"
+                  }}
+                  onMouseEnter={e => {
+                    if (isDark) {
+                      e.currentTarget.style.background = "linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)";
+                      e.currentTarget.style.boxShadow = "0 6px 25px rgba(59, 130, 246, 0.4)";
+                    } else {
+                      e.currentTarget.style.background = "linear-gradient(135deg, #4F7D66 0%, #0b3d2e 100%)";
+                      e.currentTarget.style.boxShadow = "0 6px 25px rgba(79, 125, 102, 0.4)";
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (isDark) {
+                      e.currentTarget.style.background = "linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)";
+                      e.currentTarget.style.boxShadow = "0 4px 20px rgba(59, 130, 246, 0.3)";
+                    } else {
+                      e.currentTarget.style.background = "linear-gradient(135deg, #0b3d2e 0%, #4F7D66 100%)";
+                      e.currentTarget.style.boxShadow = "0 4px 20px rgba(79, 125, 102, 0.3)";
+                    }
+                  }}
+                  onClick={() => (window.location.href = "/about")}
+                >
+                  {t('learnMoreAboutUs')}
+                </Button>
               </div>
             </div>
-            <div
-              id="counter-50"
-              className="p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
-              style={isDark ? {
-                background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
-                border: "1.5px solid rgba(79,125,102,0.18)",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
-              } : {
-                background: "#fff",
-                border: "1.5px solid #e5e7eb",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.08)"
-              }}
-            >
-              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-white mb-2">
-                {count50}+
-              </div>
-              <div className="text-lg text-gray-600 dark:text-[#E5E7EB]">
-                {t('productsAvailable')}
-              </div>
-            </div>
-            <div
-              id="counter-90"
-              className="p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
-              style={isDark ? {
-                background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
-                border: "1.5px solid rgba(79,125,102,0.18)",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.18)"
-              } : {
-                background: "#fff",
-                border: "1.5px solid #e5e7eb",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.08)"
-              }}
-            >
-              <div className="text-4xl font-bold text-[#1C3B2C] dark:text-white mb-2">
-                {count90}%
-              </div>
-              <div className="text-lg text-gray-600 dark:text-[#E5E7EB]">
-                {t('customerSatisfaction')}
+
+            {/* 3D Image Section - Desktop Only */}
+            <div className="relative animate-fadeInRight about-us-3d hidden lg:block">
+              <div className="relative group">
+                {/* Main Image with 3D Effect */}
+                <div className="relative overflow-hidden rounded-2xl shadow-2xl about-us-image"
+                  style={{
+                    background: isDark 
+                      ? "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)"
+                      : "linear-gradient(135deg, rgba(79, 125, 102, 0.1) 0%, rgba(11, 61, 46, 0.1) 100%)",
+                    border: isDark 
+                      ? "2px solid rgba(59, 130, 246, 0.2)"
+                      : "2px solid rgba(79, 125, 102, 0.2)"
+                  }}
+                >
+                  <img
+                    src={bursaHilalCompanyImage}
+                    alt="BURSA HILAL ÖRME TEKSTİL Company Building"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    style={{ aspectRatio: '4/3' }}
+                  />
+                  
+                  {/* Overlay with company info */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute bottom-6 left-6 right-6 text-white">
+                      <h4 className="text-xl font-bold mb-2">BURSA HILAL ÖRME TEKSTİL</h4>
+                      <p className="text-sm opacity-90">Fabrics with Global Standards</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating Elements */}
+                <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-80 floating-element"
+                  style={{
+                    background: isDark 
+                      ? "linear-gradient(45deg, #3B82F6 0%, #1E40AF 100%)"
+                      : "linear-gradient(45deg, #4F7D66 0%, #0b3d2e 100%)",
+                    boxShadow: isDark 
+                      ? "0 8px 32px rgba(59, 130, 246, 0.4)"
+                      : "0 8px 32px rgba(79, 125, 102, 0.4)"
+                  }}
+                >
+                  <div className="flex items-center justify-center h-full">
+                    <span className="text-white font-bold text-lg">20+</span>
+                  </div>
+                </div>
+
+                <div className="absolute -bottom-4 -left-4 w-12 h-12 rounded-full opacity-80 floating-element"
+                  style={{
+                    background: isDark 
+                      ? "linear-gradient(45deg, #1E40AF 0%, #3B82F6 100%)"
+                      : "linear-gradient(45deg, #0b3d2e 0%, #4F7D66 100%)",
+                    boxShadow: isDark 
+                      ? "0 6px 24px rgba(59, 130, 246, 0.3)"
+                      : "0 6px 24px rgba(79, 125, 102, 0.3)"
+                  }}
+                >
+                  <div className="flex items-center justify-center h-full">
+                    <span className="text-white font-bold text-sm">10+</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -966,7 +1346,7 @@ function HomePage({ isDark, t }) {
             {featuredProducts.map((product, index) => (
               <div
                 key={index}
-                className="rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] animate-fadeInUp stagger-item"
+                className="rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] animate-fadeInUp stagger-item cursor-pointer group"
                 style={isDark ? {
                   background: "linear-gradient(120deg, rgba(34,57,92,0.95) 0%, rgba(11,22,35,0.92) 100%)",
                   border: "1.5px solid rgba(79,125,102,0.18)",
@@ -976,17 +1356,20 @@ function HomePage({ isDark, t }) {
                   border: "1.5px solid #e5e7eb",
                   boxShadow: "0 4px 24px rgba(0,0,0,0.08)"
                 }}
+                onClick={() => handleLearnMore(product.link)}
               >
                 <div className="aspect-video overflow-hidden rounded-t-xl">
-                  <img
+                  <OptimizedImage
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    width={400}
+                    height={225}
+                    loading="lazy"
                   />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-[#E5E7EB] mb-2">
-                    {/* نص أبيض في الدارك مود */}
                     {product.name}
                   </h3>
                   <p className="text-gray-600 dark:text-[#E5E7EB] mb-4">
@@ -994,7 +1377,7 @@ function HomePage({ isDark, t }) {
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full transition-all duration-300 hover:-translate-y-1"
+                    className="w-full transition-all duration-300 hover:-translate-y-1 group-hover:bg-[#4F7D66] group-hover:text-white"
                     style={isDark ? {
                       background: "linear-gradient(90deg, #0B1623 0%, #22395c 100%)",
                       color: "#fff",
@@ -1009,7 +1392,10 @@ function HomePage({ isDark, t }) {
                     onMouseLeave={e => {
                       if (isDark) e.currentTarget.style.background = "linear-gradient(90deg, #0B1623 0%, #22395c 100%)";
                     }}
-                    onClick={() => handleLearnMore(product.link)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // منع انتشار الحدث للبطاقة
+                      handleLearnMore(product.link);
+                    }}
                   >
                     {t('learnMore')}
                   </Button>
@@ -1039,6 +1425,8 @@ function HomePage({ isDark, t }) {
           </div>
         </div>
       </section>
+
+
     </div>
   );
 }
@@ -1679,10 +2067,13 @@ function CatalogPage({ isDark, t }) {
               <div className="aspect-video overflow-hidden">
                 {product.image &&
                 product.image !== "/api/placeholder/400/400" ? (
-                  <img
+                  <OptimizedImage
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                    width={400}
+                    height={225}
+                    loading="lazy"
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-[#1C3B2C] to-[#4F7D66] transition-transform duration-300 hover:scale-110"></div>
@@ -1793,10 +2184,13 @@ function GalleryPage({ isDark, t }) {
               className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="w-full h-[300px] overflow-hidden rounded-lg relative">
-                <img
+                <OptimizedImage
                   src={image.image}
                   alt={image.title}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 z-10 relative"
+                  width={400}
+                  height={300}
+                  loading="lazy"
                 />
               </div>
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
@@ -2204,9 +2598,25 @@ const translations = {
     contact: "Contact",
     
     // Hero Section
-    heroTitle: "Premium Textile Manufacturing",
-    heroSubtitle: "Crafting exceptional fabrics since 2005 with 20+ years of expertise in textile manufacturing and distribution.",
+    heroTitle: "Fabrics with Global Standards",
+    heroSubtitle: "We create modern collections that combine high quality and innovation to meet the diverse needs of our clients worldwide.",
     learnMore: "Learn More",
+    
+    // About Us Section
+    aboutUsTitle: "About Bursa Hilal Tekstil",
+    aboutUsSubtitle: "Your trusted partner in premium textile manufacturing with over two decades of excellence and innovation.",
+    aboutUsHeading: "Excellence in Textile Manufacturing",
+    aboutUsText1: "Founded in 2005, BURSA HILAL ÖRME TEKSTİL has established itself as a premier manufacturer of high-quality fabrics, serving clients across more than 10 countries worldwide.",
+    aboutUsText2: "Our commitment to excellence, innovation, and customer satisfaction has made us a trusted name in the textile industry, delivering premium fabrics that meet the highest international standards.",
+    aboutUsFeature1: "20+ Years Experience",
+    aboutUsFeature1Desc: "Over two decades of expertise in premium textile manufacturing and global distribution.",
+    aboutUsFeature2: "Premium Quality",
+    aboutUsFeature2Desc: "State-of-the-art machinery and skilled artisans ensuring exceptional fabric quality.",
+    aboutUsFeature3: "Global Reach",
+    aboutUsFeature3Desc: "Serving customers across 10+ countries with consistent quality and reliability.",
+    aboutUsFeature4: "Custom Solutions",
+    aboutUsFeature4Desc: "Tailored textile solutions to meet your specific requirements and designs.",
+    learnMoreAboutUs: "Learn More About Us",
     
     // Statistics
     yearsExperience: "20+ Years of Experience",
@@ -2331,7 +2741,7 @@ const translations = {
     
     // Footer
     quickLinks: "Quick Links",
-    companyDescription: "Premium textile manufacturing with 20+ years of expertise. Serving clients worldwide with exceptional quality and innovation.",
+    companyDescription: "Fabrics with global standards, combining high quality and innovation. Serving clients worldwide with modern collections and exceptional service.",
     allRightsReserved: "All rights reserved.",
     
     // Product Details
@@ -2360,7 +2770,7 @@ const translations = {
     previous: "Previous",
     next: "Next",
     price: "Price",
-    priceOnRequest: "Price on Request",
+    priceOnRequest: "Contact for Pricing",
     minimumOrder: "Minimum Order",
     opacityLevel: "Opacity Level",
     containerMinimum: "Container (Container)",
@@ -2383,9 +2793,25 @@ const translations = {
     contact: "اتصل بنا",
     
     // Hero Section
-    heroTitle: "تصنيع المنسوجات المميزة",
-    heroSubtitle: "نصنع الأقمشة الاستثنائية منذ 2005 مع أكثر من 20 عاماً من الخبرة في تصنيع وتوزيع المنسوجات.",
+    heroTitle: "أقمشة بمعايير عالمية",
+    heroSubtitle: "نصنع تشكيلات عصرية تجمع بين الجودة العالية والابتكار، لنلبي مختلف احتياجات عملائنا حول العالم.",
     learnMore: "اعرف المزيد",
+    
+    // About Us Section
+    aboutUsTitle: "عن بورصة هلال تكستيل",
+    aboutUsSubtitle: "شريكك الموثوق في تصنيع المنسوجات المميزة مع أكثر من عقدين من التميز والابتكار.",
+    aboutUsHeading: "التميز في تصنيع المنسوجات",
+    aboutUsText1: "تأسست في عام 2005، أثبتت بورصة هلال أورمة تكستيل أنها مصنع رائد للأقمشة عالية الجودة، تخدم العملاء في أكثر من 10 دول حول العالم.",
+    aboutUsText2: "التزامنا بالتميز والابتكار ورضا العملاء جعلنا اسماً موثوقاً في صناعة المنسوجات، حيث نوفر أقمشة مميزة تلبي أعلى المعايير الدولية.",
+    aboutUsFeature1: "20+ سنوات من الخبرة",
+    aboutUsFeature1Desc: "أكثر من عقدين من الخبرة في تصنيع المنسوجات المميزة والتوزيع العالمي.",
+    aboutUsFeature2: "جودة مميزة",
+    aboutUsFeature2Desc: "آلات متطورة وحرفيون ماهرون يضمنون جودة استثنائية للأقمشة.",
+    aboutUsFeature3: "وصول عالمي",
+    aboutUsFeature3Desc: "نخدم العملاء في أكثر من 10 دول بجودة وموثوقية ثابتة.",
+    aboutUsFeature4: "حلول مخصصة",
+    aboutUsFeature4Desc: "حلول نسيجية مصممة خصيصاً لتلبية متطلباتك وتصاميمك الخاصة.",
+    learnMoreAboutUs: "اعرف المزيد عنا",
     
     // Statistics
     yearsExperience: "20+ سنوات من الخبرة",
@@ -2510,7 +2936,7 @@ const translations = {
     
     // Footer
     quickLinks: "روابط سريعة",
-    companyDescription: "تصنيع منسوجات مميزة مع أكثر من 20 عاماً من الخبرة. نخدم العملاء في جميع أنحاء العالم بجودة استثنائية وابتكار.",
+    companyDescription: "أقمشة بمعايير عالمية تجمع بين الجودة العالية والابتكار. نخدم العملاء في جميع أنحاء العالم بتشكيلات عصرية وخدمة استثنائية.",
     allRightsReserved: "جميع الحقوق محفوظة.",
     
     // Product Details
@@ -2539,7 +2965,7 @@ const translations = {
     previous: "السابق",
     next: "التالي",
     price: "السعر",
-    priceOnRequest: "يُحدد عند الطلب",
+    priceOnRequest: "تواصل معنا للأسعار",
     minimumOrder: "الحد الأدنى للطلب",
     opacityLevel: "درجة التعتيم",
     containerMinimum: "حاوية (كونتيرا)",
@@ -2612,6 +3038,7 @@ function App() {
         </Routes>
         <Footer key={`footer-${isDark}`} isDark={isDark} t={t} />
         <WhatsAppButton key={`whatsapp-${isDark}`} t={t} isDark={isDark} />
+        <PerformanceMonitor showMetrics={process.env.NODE_ENV === 'development'} />
       </div>
     </Router>
   );

@@ -1,50 +1,130 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Hook لمراقبة الأداء
+// Hook for lazy loading components
+export const useLazyLoad = (threshold = 0.1) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => {
+      if (elementRef.current) {
+        observer.unobserve(elementRef.current);
+      }
+    };
+  }, [threshold]);
+
+  return [elementRef, isVisible];
+};
+
+// Hook for debouncing
+export const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
+// Hook for throttling
+export const useThrottle = (callback, delay) => {
+  const lastRun = useRef(Date.now());
+
+  return useCallback((...args) => {
+    if (Date.now() - lastRun.current >= delay) {
+      callback(...args);
+      lastRun.current = Date.now();
+    }
+  }, [callback, delay]);
+};
+
+// Hook for performance monitoring
 export const usePerformanceMonitor = () => {
+  const [metrics, setMetrics] = useState({});
+
   useEffect(() => {
     if ('performance' in window) {
+      // Monitor Core Web Vitals
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          if (entry.entryType === 'navigation') {
-            console.log('Page Load Time:', entry.loadEventEnd - entry.loadEventStart, 'ms');
-            console.log('DOM Content Loaded:', entry.domContentLoadedEventEnd - entry.domContentLoadedEventStart, 'ms');
-            console.log('First Paint:', entry.loadEventEnd - entry.fetchStart, 'ms');
-          }
+          setMetrics(prev => ({
+            ...prev,
+            [entry.name]: entry.value
+          }));
         }
       });
-      
-      observer.observe({ entryTypes: ['navigation'] });
-      
+
+      observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
+
       return () => observer.disconnect();
     }
   }, []);
+
+  return metrics;
 };
 
-// Hook لتحسين الصور
-export const useImageOptimization = (src) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [currentSrc, setCurrentSrc] = useState(null);
+// Hook for preloading critical resources
+export const usePreload = (urls) => {
+  useEffect(() => {
+    urls.forEach(url => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.href = url;
+      link.as = url.endsWith('.css') ? 'style' : 'script';
+      document.head.appendChild(link);
+    });
+  }, [urls]);
+};
+
+// Hook for image optimization
+export const useImageOptimization = (src, options = {}) => {
+  const [optimizedSrc, setOptimizedSrc] = useState(src);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!src) return;
 
+    setIsLoading(true);
+    setError(null);
+
     const img = new Image();
     
     img.onload = () => {
-      setCurrentSrc(src);
-      setIsLoaded(true);
+      setOptimizedSrc(src);
+      setIsLoading(false);
     };
-    
+
     img.onerror = () => {
-      setIsError(true);
+      setError('Failed to load image');
+      setIsLoading(false);
     };
-    
+
     img.src = src;
   }, [src]);
 
-  return { isLoaded, isError, currentSrc };
+  return { optimizedSrc, isLoading, error };
 };
 
 // Hook لتحسين التمرير
@@ -99,5 +179,7 @@ export const useMemoryOptimization = () => {
 
   return { addCleanup };
 };
+
+
 
 

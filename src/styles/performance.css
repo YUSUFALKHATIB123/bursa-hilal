@@ -1,4 +1,4 @@
-/* Performance optimizations */
+/* Performance Optimizations */
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
@@ -12,21 +12,43 @@
   }
 }
 
-/* Optimize animations for better performance */
-@media (prefers-reduced-motion: no-preference) {
-  .animate-fadeInUp {
-    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity;
-  }
+/* Optimize animations */
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
 
-  .animate-fadeIn {
-    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: opacity;
-  }
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out;
+}
 
-  .animate-slideUp {
-    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
+.animate-fadeInRight {
+  animation: fadeInRight 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes fadeInRight {
+  from { 
+    opacity: 0; 
+    transform: translateX(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0); 
   }
 }
 
@@ -41,51 +63,158 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Optimize focus for accessibility */
+/* Optimize focus indicators */
 *:focus {
   outline: 2px solid #4F7D66;
   outline-offset: 2px;
 }
 
-/* Loading states */
-.loading {
-  position: relative;
-  overflow: hidden;
-}
-
-.loading::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+/* Optimize loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
   animation: loading 1.5s infinite;
 }
 
 @keyframes loading {
-  0% { left: -100%; }
-  100% { left: 100%; }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* Optimize for mobile */
+/* Optimize transitions */
+.transition-optimized {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Optimize hover effects */
+.hover-optimized {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-optimized:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Optimize grid layouts */
+.grid-optimized {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Optimize text rendering */
+.text-optimized {
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+}
+
+/* Optimize backdrop filters */
+.backdrop-optimized {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Optimize transforms */
+.transform-optimized {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize opacity transitions */
+.opacity-optimized {
+  transition: opacity 0.2s ease;
+}
+
+/* Optimize background gradients */
+.gradient-optimized {
+  background: linear-gradient(135deg, #4F7D66 0%, #0b3d2e 100%);
+  background-attachment: fixed;
+}
+
+/* Optimize shadows */
+.shadow-optimized {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Optimize borders */
+.border-optimized {
+  border: 1px solid rgba(79, 125, 102, 0.2);
+  border-radius: 8px;
+}
+
+/* Optimize spacing */
+.spacing-optimized {
+  padding: 1rem;
+  margin: 0.5rem;
+}
+
+/* Optimize responsive images */
+.responsive-image {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+/* Optimize lazy loading */
+.lazy-load {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lazy-load.loaded {
+  opacity: 1;
+}
+
+/* Optimize performance for mobile */
 @media (max-width: 768px) {
   .mobile-optimized {
-    transform: translateZ(0);
-    backface-visibility: hidden;
+    transform: none !important;
+    animation: none !important;
+  }
+  
+  .mobile-optimized * {
+    animation: none !important;
+    transition: none !important;
   }
 }
 
-/* Print styles */
+/* Optimize print styles */
 @media print {
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
   .no-print {
     display: none !important;
   }
-  
-  body {
-    font-size: 12pt;
-    line-height: 1.4;
+}
+
+/* Optimize high contrast mode */
+@media (prefers-contrast: high) {
+  .high-contrast {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Optimize dark mode performance */
+@media (prefers-color-scheme: dark) {
+  .dark-optimized {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+}
+
+/* Optimize reduced data mode */
+@media (prefers-reduced-data: reduce) {
+  .data-optimized {
+    background-image: none !important;
+    animation: none !important;
   }
 }
 
