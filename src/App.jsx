@@ -463,14 +463,14 @@ function Navigation({ language, toggleLanguage, t, isDark, toggleDarkMode }) {
               <OptimizedImage
                 src={logoImage}
                 alt="BURSA HILAL ÖRME TEKSTİL Logo"
-                className="w-16 h-14 object-contain rounded-lg logo-image"
-                width={64}
-                height={56}
+                className="w-13 h-9 object-contain rounded-lg logo-image"
+                width={8}
+                height={8}
                 priority={true}
                 style={{ backgroundColor: 'transparent' }}
               />
             </div>
-            <div className="ml-4 flex flex-col justify-center">
+            <div className="ml-0 flex flex-col justify-center">
               <div className="text-xl font-semibold text-[#E5E7EB] leading-tight">
                 BURSA HILAL
               </div>
@@ -2473,7 +2473,7 @@ function Footer({ isDark, t }) {
               <img
                 src={logoImage}
                 alt="BURSA HILAL ÖRME TEKSTİL Logo"
-                className="w-10 h-10 object-contain rounded-lg mr-3"
+                className="w-13 h-10 object-contain rounded-lg"
               />
               <div>
                 <div className="text-lg font-semibold text-white drop-shadow-md">BURSA HILAL ÖRME</div>
@@ -2535,7 +2535,7 @@ function Footer({ isDark, t }) {
             <h3 className="text-lg font-semibold mb-4 text-white drop-shadow-md">{t('contact')}</h3>
             <div className="space-y-2 text-white">
               <a
-                href="https://maps.app.goo.gl/btQ1xjfyhzsRtj2c2"
+                href="https://maps.app.goo.gl/xeVWUSMUr89kbjHUA"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white hover:text-[#FFD700] transition-colors flex items-center mt-3 drop-shadow"
